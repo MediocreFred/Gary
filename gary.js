@@ -14,7 +14,7 @@ var schedule = require('node-schedule');
 var meme = require('./post_meme.js');
 var post_meme_job = schedule.scheduleJob('29 15 * * *', function(){
     const embed = new RichEmbed()    
-    meme.post_meme(client, embed, "Animemes");
+    meme.post_meme(client, embed, "DnDMemes");
     });
 
 
