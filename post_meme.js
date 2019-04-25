@@ -32,7 +32,7 @@ module.exports = {
                 console.log('Error getting post title:', e.stack);
             }
             //Post the meme
-            var channel_list = ['496100600644239380', '534054412222464002']; // Replace with known channel ID dndmemes: 496100600644239380 test channel: 534054412222464002
+            var channel_list = ['', '']; // Replace with known channel ID 
             for (let channel of channel_list) {
                 var generalChannel = client.channels.get(channel) 
                 try {
