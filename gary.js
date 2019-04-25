@@ -12,9 +12,9 @@ client.login(/*client token goes here*/)
 // This is where Gary will post a meme everyday
 var schedule = require('node-schedule');
 var meme = require('./post_meme.js');
-var post_meme_job = schedule.scheduleJob('25 16 * * *', function(){
+var post_meme_job = schedule.scheduleJob('29 15 * * *', function(){
     const embed = new RichEmbed()    
-    meme.post_meme(client, embed);
+    meme.post_meme(client, embed, "Animemes");
     });
 
 
