@@ -13,7 +13,7 @@ module.exports = {
           }, function (err, res, body) {
             var data = JSON.parse(body); 
             var index = 0;
-            while(data['data']['children'][index]['data']['is_self'] != false && index < 10){ //this loops through to find the first non-text post
+              while (data['data']['children'][index]['data']['is_self'] != false && data['data']['children'][index]['data']['over_18'] != false && index < 10){ //this loops through to find the first non-text post
                 index = index+1;
             }
             //get the post url
