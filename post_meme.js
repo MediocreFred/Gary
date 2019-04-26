@@ -28,7 +28,6 @@ module.exports = {
             //Post the meme
 
             var channel_list = [/*Replace with known channel ID dndmemes*/];
-            var channel_list = ['', '']; // Replace with known channel ID 
             for (let channel of channel_list) {
                 var generalChannel = client.channels.get(channel) 
                 try {
