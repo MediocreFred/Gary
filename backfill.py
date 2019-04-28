@@ -1,7 +1,22 @@
 #This file will be used to backfill the meme database
 import requests
-
+import os
 import json
+
+currentDirectory = os.getcwd()
+with open(currentDirectory + '\\memeData\\Animemes.txt','a+') as outfile:
+        url = 'https://www.reddit.com/r/animemes/top/.json?sort=top&t=all&limit=100'
+        reqHeaders = {
+    'User-Agent' : 'personal:Gary:v0.9.2 (by /u/broseidon16)'
+    }
+        r = requests.get(url, headers=reqHeaders)
+
+        data = r.json()
+
+        for post in data['data']['children']:
+            if post['data']['is_self'] == False and post['data']['over_18'] == False:
+                outfile.write(post['data']['url'].strip('"') + '\n')
+                
 
 #all this is just for reference 
 """ url = 'https://www.reddit.com/r/dndmemes/top/.json?sort=top&t=day&limit=10'
