@@ -6,7 +6,7 @@ module.exports = {
 
         request({
             headers: {
-                'User-Agent' : 'personal:Gary:Soult (by /u/broseidon16)'
+                'User-Agent' : 'personal:Gary:vSoult (by /u/broseidon16)'
             },
             uri: 'https://www.reddit.com/r/' + subreddit + '/top/.json?sort=top&t=day&limit=10',
             method: 'GET'
@@ -25,6 +25,8 @@ module.exports = {
             //get the post's title
             var post_title = data['data']['children'][index]['data']['title'].replace(/['"]+/g, '');
 
+            // Save the meme
+            fs.appendFileSync(subreddit + ".txt", post_image_url);
             //Post the meme
 
             var channel_list = [/*Replace with known channel ID dndmemes*/];
