@@ -3,10 +3,11 @@ module.exports = {
     post_meme : function(client, embed, subreddit){
         var request = require('request');
         var fs = require('fs');
+        const path = require('path');
 
         request({
             headers: {
-                'User-Agent' : 'personal:Gary:Soult (by /u/broseidon16)'
+                'User-Agent' : 'personal:Gary:vSoult (by /u/broseidon16)'
             },
             uri: 'https://www.reddit.com/r/' + subreddit + '/top/.json?sort=top&t=day&limit=10',
             method: 'GET'
@@ -25,8 +26,10 @@ module.exports = {
             //get the post's title
             var post_title = data['data']['children'][index]['data']['title'].replace(/['"]+/g, '');
 
-            //Post the meme
+            // Save the meme
+            fs.appendFileSync(path.resolve(__dirname,"memeData", subreddit + ".txt"), post_image_url);
 
+            //Post the meme
             var channel_list = [/*Replace with known channel ID dndmemes*/];
             for (let channel of channel_list) {
                 var generalChannel = client.channels.get(channel) 
