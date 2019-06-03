@@ -27,7 +27,7 @@ module.exports = {
             var post_title = data['data']['children'][index]['data']['title'].replace(/['"]+/g, '');
 
             // Save the meme
-            fs.appendFileSync(path.resolve(__dirname,"memeData", subreddit + ".txt"), post_image_url);
+            fs.appendFileSync(path.resolve(__dirname,"memeData", subreddit + ".txt"), "\n" + post_image_url);
 
             //Post the meme
             var channel_list = [/*Replace with known channel ID dndmemes*/];
