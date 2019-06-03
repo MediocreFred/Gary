@@ -14,7 +14,7 @@ var schedule = require('node-schedule');
 var meme = require('./post_meme.js');
 var post_meme_job = schedule.scheduleJob('0 10 * * *', function () {
     const embed = new RichEmbed()
-    meme.post_meme(client, embed, "Animemes");
+    meme.post_meme(client, embed, "LotRMemes");
 });
 
 var post_meme_job = schedule.scheduleJob('0 13 * * *', function () {
