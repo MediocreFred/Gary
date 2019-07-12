@@ -43,14 +43,41 @@ module.exports = {
                     // Set the main content of the embed
                     embed.setDescription(post_title);
                     // Set the image of the embed
-                    embed.setImage(post_image_url)
+                    embed.setImage(post_image_url);
                     // Send the embed to the same channel as the message
                     generalChannel.send(embed);
-                    console.log('Posted a meme from r/' + subreddit)
+                    console.log('Posted a meme from r/' + subreddit);
                 } catch(e) {
                     console.log('Error posting the meme:', e.stack);
                 }
             }
           });
+    },
+
+    post_random_meme : function(channel, embed) {
+        try {
+            //this function will be used to post a random meme from the database
+            var fs = require('fs');
+            const path = require('path');
+            
+            //files can be found in the directory 'memeData'
+            var files = ['Animemes.txt', 'DnDMemes.txt', 'Memes.txt', 'TrippinThroughTime.txt', 'DankMemes.txt', 'LotRMemes.txt', 'PrequelMemes.txt'];
+            var file_selection = files[Math.floor(Math.random() * files.length)];
+            
+            var memes = fs.readFileSync(path.resolve(__dirname,"memeData",file_selection)).toString().split("\n");
+            var meme = "";
+            while(meme == ""){
+                meme = memes[Math.floor(Math.random() * memes.length)];
+            }
+            
+            //format the post
+            embed.setTitle('Random meme from ' + file_selection.slice(0,-4));
+            embed.setColor(0xFF0000);
+            embed.setImage(meme);
+            channel.send(embed);
+            console.log("Posted a random meme, " + meme+ ", from " + file_selection);
+        } catch(e) {
+            console.log("Error posting the random meme:", e.stack);
+        }
     }
 };

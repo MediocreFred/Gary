@@ -12,22 +12,22 @@ client.login(/*client token goes here*/)
 // This is where Gary will post a meme everyday
 var schedule = require('node-schedule');
 var meme = require('./post_meme.js');
-var post_meme_job = schedule.scheduleJob('0 10 * * *', function () {
+var post_LotRMemes_meme_job = schedule.scheduleJob('0 10 * * *', function () {
     const embed = new RichEmbed()
     meme.post_scheduled_meme(client, embed, "LotRMemes");
 });
 
-var post_meme_job = schedule.scheduleJob('0 13 * * *', function () {
+var post_TrippinThroughTime_meme_job = schedule.scheduleJob('0 13 * * *', function () {
     const embed = new RichEmbed()
     meme.post_scheduled_meme(client, embed, "TrippinThroughTime");
 });
 
-var post_meme_job = schedule.scheduleJob('0 16 * * *', function(){
+var post_DnDMemes_meme_job = schedule.scheduleJob('0 16 * * *', function(){
     const embed = new RichEmbed()    
     meme.post_scheduled_meme(client, embed, "DnDMemes");
 });
 
-var post_meme_job = schedule.scheduleJob('0 19 * * *', function(){
+var post_PrequelMemes_meme_job = schedule.scheduleJob('0 19 * * *', function(){
     const embed = new RichEmbed()    
     meme.post_scheduled_meme(client, embed, "PrequelMemes");
 });
@@ -81,8 +81,13 @@ function processCommand(receivedMessage) {
         rollDiceCommand(argument_list, receivedMessage);
         }
     }
+    if (primaryCommand == "meme"){
+        //command to post a random meme
+        const embed = new RichEmbed()
+        meme.post_random_meme(receivedMessage.channel, embed);
+    }
     else {
-        receivedMessage.channel.send("I don't understand the command. Try `!d20` or '!2d8'.")
+        receivedMessage.channel.send("I don't understand the command. Try `!d20`, '!2d8', or '!meme'.")
     }
 }
 
