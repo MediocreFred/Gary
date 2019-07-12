@@ -14,22 +14,22 @@ var schedule = require('node-schedule');
 var meme = require('./post_meme.js');
 var post_meme_job = schedule.scheduleJob('0 10 * * *', function () {
     const embed = new RichEmbed()
-    meme.post_meme(client, embed, "LotRMemes");
+    meme.post_scheduled_meme(client, embed, "LotRMemes");
 });
 
 var post_meme_job = schedule.scheduleJob('0 13 * * *', function () {
     const embed = new RichEmbed()
-    meme.post_meme(client, embed, "TrippinThroughTime");
+    meme.post_scheduled_meme(client, embed, "TrippinThroughTime");
 });
 
 var post_meme_job = schedule.scheduleJob('0 16 * * *', function(){
     const embed = new RichEmbed()    
-    meme.post_meme(client, embed, "DnDMemes");
+    meme.post_scheduled_meme(client, embed, "DnDMemes");
 });
 
 var post_meme_job = schedule.scheduleJob('0 19 * * *', function(){
     const embed = new RichEmbed()    
-    meme.post_meme(client, embed, "PrequelMemes");
+    meme.post_scheduled_meme(client, embed, "PrequelMemes");
 });
 
 

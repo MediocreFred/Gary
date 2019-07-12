@@ -1,6 +1,6 @@
 
 module.exports = {
-    post_meme : function(client, embed, subreddit){
+    post_scheduled_meme : function(client, embed, subreddit){
         var request = require('request');
         var fs = require('fs');
         const path = require('path');
@@ -30,7 +30,7 @@ module.exports = {
             fs.appendFileSync(path.resolve(__dirname,"memeData", subreddit + ".txt"), "\n" + post_image_url);
 
             //Post the meme
-            var channel_list = [/*Replace with known channel ID dndmemes*/];
+            var channel_list = [/*Replace with known channel ID dndmemes*/"496100600644239380"];
             for (let channel of channel_list) {
                 var generalChannel = client.channels.get(channel) 
                 try {
