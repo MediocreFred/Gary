@@ -27,10 +27,10 @@ var post_DnDMemes_meme_job = schedule.scheduleJob('0 16 * * *', function(){
     meme.post_scheduled_meme(client, embed, "DnDMemes");
 });
 
-var post_PrequelMemes_meme_job = schedule.scheduleJob('0 19 * * *', function(){
-    const embed = new RichEmbed()    
-    meme.post_scheduled_meme(client, embed, "PrequelMemes");
-});
+//var //post_PrequelMemes_meme_job = schedule.scheduleJob('0 19 * * *', function(){
+    //const embed = new RichEmbed()    
+    //meme.post_scheduled_meme(client, embed, "PrequelMemes");
+//});
 
 
 // This is where Gary will handle all the messages coming in
