@@ -27,10 +27,12 @@ var post_DnDMemes_meme_job = schedule.scheduleJob('0 16 * * *', function(){
     meme.post_scheduled_meme(client, embed, "DnDMemes");
 });
 
-//var //post_PrequelMemes_meme_job = schedule.scheduleJob('0 19 * * *', function(){
-    //const embed = new RichEmbed()    
-    //meme.post_scheduled_meme(client, embed, "PrequelMemes");
-//});
+//Runs once a day to store the top memes from the selected subreddits
+var store_meme = require('./store_meme.js');
+var store_meme_job = schedule.scheduleJob('0 14 * * *', function(){  
+    var subreddits = ['Animemes', 'DankMemes', 'DnDMemes', 'LotRMemes', 'Memes', 'PrequelMemes', 'TrippinThroughTime'];
+    store_meme.store_memes(subreddits);
+});
 
 
 // This is where Gary will handle all the messages coming in
