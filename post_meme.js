@@ -30,7 +30,7 @@ module.exports = {
             fs.appendFileSync(path.resolve(__dirname,"memeData", subreddit + ".txt"), "\n" + post_image_url);
 
             //Post the meme
-            var channel_list = [/*Replace with known channel ID dndmemes*/"496100600644239380"];
+            var channel_list = [/*Replace with known channel ID dndmemes*/];
             for (let channel of channel_list) {
                 var generalChannel = client.channels.get(channel) 
                 try {
