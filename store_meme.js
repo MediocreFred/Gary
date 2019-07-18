@@ -4,8 +4,6 @@ module.exports = {
         var fs = require('fs');
         const path = require('path');
 
-        console.log('Made it here');
-
         subreddits.forEach(subreddit => {
             request({
                 headers: {
@@ -23,9 +21,18 @@ module.exports = {
                 var post_image_url = data['data']['children'][index]['data']['url'].replace(/['"]+/g, '');
                 // Save the meme
                 fs.appendFileSync(path.resolve(__dirname,"memeData", subreddit + ".txt"), "\n" + post_image_url);
-                console.log('Stored');
               });
+              console.log('Stored Memes');
         });
         
+    },
+
+    delete_duplicates : function() {
+        //This function will look to see if there are any duplicate memes within the meme database and remove one of them
+        
+        //For each of the files in the database
+        // go through the files and find duplicates
+        // if there are duplicates, delete it
+        //make sure there is no blank line left over
     }
 }
