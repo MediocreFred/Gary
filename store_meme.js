@@ -29,8 +29,18 @@ module.exports = {
 
     delete_duplicates : function() {
         //This function will look to see if there are any duplicate memes within the meme database and remove one of them
+        var fs = require('fs');
+        const path = require('path');
+        console.log(path.resolve(__dirname, "memeData"));
+        //Get the files in the meme directory
+        var files;
+        fs.readdir(path.resolve(__dirname, "memeData"), function(err, items) {
+            //For each of the files in the database
+            for (var i = 0; i < items.length; i++) {
+                console.log(items[i])
+            }
+        });
         
-        //For each of the files in the database
         // go through the files and find duplicates
         // if there are duplicates, delete it
         //make sure there is no blank line left over
