@@ -83,7 +83,7 @@ function processCommand(receivedMessage) {
         rollDiceCommand(argument_list, receivedMessage);
         }
     }
-    if (primaryCommand == "meme"){
+    else if (primaryCommand == "meme"){
         //command to post a random meme
         const embed = new RichEmbed()
         meme.post_random_meme(receivedMessage.channel, embed);
