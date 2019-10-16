@@ -35,8 +35,8 @@ var store_meme_job = schedule.scheduleJob('0 14 * * *', function(){
 });
 
 
-//Runs once a week to delete any repeat memes
-var delete_duplicate_memes_job = schedule.scheduleJob('49 11 * * *', function(){  
+//Runs once a day to delete any repeat memes
+var delete_duplicate_memes_job = schedule.scheduleJob('05 14 * * *', function(){  
     store_meme.delete_duplicates();
 });
 
