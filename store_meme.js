@@ -4,8 +4,6 @@ module.exports = {
         var fs = require('fs');
         const path = require('path');
 
-        console.log('Made it here');
-
         subreddits.forEach(subreddit => {
             request({
                 headers: {
@@ -23,9 +21,36 @@ module.exports = {
                 var post_image_url = data['data']['children'][index]['data']['url'].replace(/['"]+/g, '');
                 // Save the meme
                 fs.appendFileSync(path.resolve(__dirname,"memeData", subreddit + ".txt"), "\n" + post_image_url);
-                console.log('Stored');
               });
+              console.log('Stored Memes');
+        });       
+    },
+
+    delete_duplicates : function() {
+        //This function will look to see if there are any duplicate memes within the meme database and remove one of them
+        var fs = require('fs');
+        const path = require('path');
+        console.log(path.resolve(__dirname, "memeData"));
+        //Get the files in the meme directory
+        //var files;
+        fs.readdir(path.resolve(__dirname, "memeData"), function(err, items) {
+            //For each of the files in the database
+            for (var i = 0; i < items.length; i++) {
+                // go through the file and find duplicates
+                var buf=fs.readFileSync(path.resolve(__dirname, "memeData", items[i]));
+                var links = new Set()
+                buf.toString().split(/\n/).forEach(function(line){
+                    links.add(line)
+                });
+
+                let writeStream = fs.createWriteStream(path.resolve(__dirname, "memeData", items[i]))
+
+                links.forEach(link => {
+                    writeStream.write(link + '\n')
+                });
+                writeStream.end()
+            console.log("Removed duplicate URLs from the meme files")
+            }
         });
-        
     }
 }
