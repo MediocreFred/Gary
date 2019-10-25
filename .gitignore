@@ -3,3 +3,5 @@
 .vs/slnx.sqlite
 .vs/gary/v15/.suo
 /.vs/VSWorkspaceState.json
+node_modules/
+.eslintrc.js
