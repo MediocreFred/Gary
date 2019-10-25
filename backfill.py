@@ -7,7 +7,7 @@ currentDirectory = os.getcwd()
 with open(currentDirectory + '\\memeData\\PrequelMemes.txt','a+') as outfile:
         url = 'https://www.reddit.com/r/prequelmemes/top/.json?sort=top&t=all&limit=100'
         reqHeaders = {
-    'User-Agent' : 'personal:Gary:v0.9.2 (by /u/broseidon16)'
+    'User-Agent' : 'personal:Gary:v1.1.0 (by /u/broseidon16)'
     }
         r = requests.get(url, headers=reqHeaders)
 
@@ -22,7 +22,7 @@ with open(currentDirectory + '\\memeData\\PrequelMemes.txt','a+') as outfile:
 """ url = 'https://www.reddit.com/r/dndmemes/top/.json?sort=top&t=day&limit=10'
 
 headers = {
-    'User-Agent' : 'personal:Gary:v0.9.2 (by /u/broseidon16)'
+    'User-Agent' : 'personal:Gary:v1.1.0 (by /u/broseidon16)'
     }
 
 r = requests.get(url,headers=headers)
