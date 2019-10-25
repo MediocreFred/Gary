@@ -1,5 +1,5 @@
 {
-  "name": "gary",
+  "name": "gary_packages",
   "version": "1.0.0",
   "description": "This package is used for Gary, my DnD Discord bot.",
   "main": "gary.js",
