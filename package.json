@@ -1,7 +1,7 @@
 {
   "name": "gary",
   "version": "1.1.0",
-  "description": "Gary is a Discord bot made by me for use by my D&amp;D group. Currently, Gary can roll dice on command and post memes once a day from Reddit. Update: The !meme command has gone live.",
+  "description": "This package is used for Gary, my DnD Discord bot.",
   "main": "gary.js",
   "dependencies": {
     "discord.js": "^11.5.1",
