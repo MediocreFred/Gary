@@ -50,9 +50,10 @@ client.on('message', (receivedMessage) => {
 
     // Check if the bot's user was tagged in the message
     if (receivedMessage.content.includes(client.user.toString())) {
-        console.log(receivedMessage.author.toString(),receivedMessage.content)
+        console.log(receivedMessage.author.toString(),receivedMessage.content);
         // Send acknowledgement message
-        receivedMessage.channel.send("Thanks, bro!")
+        receivedMessage.channel.send("Thanks, bro!");
+        console.log("Replying to message with default reply");
     }
     //Handle different Commands
     if (receivedMessage.content.startsWith("!")) {
@@ -81,11 +82,11 @@ function processCommand(receivedMessage) {
     if (argument_list = primaryCommand.match(/(\d*)(d)(\d*)/)) {
         console.log("Argument List" + argument_list)
         if (argument_list.length == 4 && argument_list[2] == 'd') {
-        if (argument_list[1] != '') {
+            if (argument_list[1] != '') {
                 argument_list[1] = parseInt(argument_list[1]);
-        }
-        argument_list[3] = parseInt(argument_list[3]);
-        rollDiceCommand(argument_list, receivedMessage);
+            }
+            argument_list[3] = parseInt(argument_list[3]);
+            rollDiceCommand(argument_list, receivedMessage);
         }
     }
     else if (primaryCommand == "meme"){
@@ -101,18 +102,19 @@ function processCommand(receivedMessage) {
 function rollDiceCommand(argument_list, receivedMessage) {
     try {
         if (typeof(argument_list[1]) == "number" && argument_list[1] != '' && typeof(argument_list[3]) == "number") {
-        var rolls = new Array();
-        for (i = 0; i < argument_list[1]; i++) {
-            rolls.push(Math.floor((Math.random() * argument_list[3]) + 1));
+            var rolls = new Array();
+            for (i = 0; i < argument_list[1]; i++) {
+                rolls.push(Math.floor((Math.random() * argument_list[3]) + 1));
+            }
+            receivedMessage.channel.send("You rolled " + rolls)
         }
-        receivedMessage.channel.send("You rolled " + rolls)
-        }
-    else if (typeof(argument_list[1]) != "number" && typeof(argument_list[3]) == "number") {
+        else if (typeof(argument_list[1]) != "number" && typeof(argument_list[3]) == "number") {
             receivedMessage.channel.send("You rolled a " + Math.floor((Math.random() * argument_list[3]) + 1));
         }
     }
     catch(err) {
-    console.log(err.stack);
-    receivedMessage.channel.send("Something is wrong here. Might be me, might be you, I dunno...")
+        console.log("Error handling command request");
+        console.log(err.stack);
+        receivedMessage.channel.send("Something is wrong here. Might be me, might be you, I dunno...");
     }
 }
