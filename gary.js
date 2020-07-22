@@ -1,5 +1,5 @@
-const {Client, RichEmbed} = require('discord.js')
-const client = new Client()
+const Discord = require('discord.js')
+const client = new Discord.Client()
 
 client.on('ready', () => {
     // List servers the bot is connected to
@@ -13,17 +13,17 @@ client.login(/*client token goes here*/)
 var schedule = require('node-schedule');
 var meme = require('./post_meme.js');
 var post_LotRMemes_meme_job = schedule.scheduleJob('0 10 * * *', function () {
-    const embed = new RichEmbed()
+    const embed = new Discord.MessageEmbed()
     meme.post_scheduled_meme(client, embed, "LotRMemes");
 });
 
 var post_TrippinThroughTime_meme_job = schedule.scheduleJob('0 13 * * *', function () {
-    const embed = new RichEmbed()
+    const embed = new Discord.MessageEmbed()
     meme.post_scheduled_meme(client, embed, "TrippinThroughTime");
 });
 
 var post_DnDMemes_meme_job = schedule.scheduleJob('0 16 * * *', function(){
-    const embed = new RichEmbed()    
+    const embed = new Discord.MessageEmbed()    
     meme.post_scheduled_meme(client, embed, "DnDMemes");
 });
 
@@ -91,7 +91,7 @@ function processCommand(receivedMessage) {
     }
     else if (primaryCommand == "meme"){
         //command to post a random meme
-        const embed = new RichEmbed()
+        const embed = new Discord.MessageEmbed()
         meme.post_random_meme(receivedMessage.channel, embed);
     }
     else {

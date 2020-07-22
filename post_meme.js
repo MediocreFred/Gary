@@ -32,7 +32,7 @@ module.exports = {
             //Post the meme
             var channel_list = [/*Replace with known channel ID dndmemes*/];
             for (let channel of channel_list) {
-                var generalChannel = client.channels.get(channel) 
+                var generalChannel = client.channels.cache.get(channel) 
                 try {
                     // Set the title of the field
                     embed.setTitle('Top post on r/' + subreddit + ' from the past 24 hours')
