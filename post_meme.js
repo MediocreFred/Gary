@@ -1,3 +1,4 @@
+const config = require('./config.json');
 module.exports = {
     post_scheduled_meme : function(client, embed, subreddit) {
         const request = require('request');
@@ -31,7 +32,7 @@ module.exports = {
 
             // Post the meme
             // Place known channel ID in list below
-            const channel_list = [];
+            const channel_list = config.channels;
             for (const channel of channel_list) {
                 const generalChannel = client.channels.cache.get(channel);
                 try {

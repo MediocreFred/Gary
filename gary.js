@@ -1,3 +1,4 @@
+const config = require('./config.json');
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
@@ -6,34 +7,30 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
-// client token goes here
-client.login();
+client.login(config.token);
 
 
 // This is where Gary will post a meme everyday
 const schedule = require('node-schedule');
 const meme = require('./post_meme.js');
-// let post_LotRMemes_meme_job =
+
 schedule.scheduleJob('0 10 * * *', function() {
     const embed = new Discord.MessageEmbed();
     meme.post_scheduled_meme(client, embed, 'LotRMemes');
 });
 
-// var post_TrippinThroughTime_meme_job =
 schedule.scheduleJob('0 13 * * *', function() {
     const embed = new Discord.MessageEmbed();
     meme.post_scheduled_meme(client, embed, 'TrippinThroughTime');
 });
 
-// var post_DnDMemes_meme_job =
 schedule.scheduleJob('0 16 * * *', function() {
     const embed = new Discord.MessageEmbed();
     meme.post_scheduled_meme(client, embed, 'DnDMemes');
 });
 
-// Runs once a day to store the top memes from the selected subreddits
 const store_meme = require('./store_meme.js');
-// var store_meme_job =
+
 schedule.scheduleJob('0 14 * * *', function() {
     const subreddits = ['Animemes', 'DankMemes', 'DnDMemes', 'LotRMemes', 'Memes', 'PrequelMemes', 'TrippinThroughTime'];
     store_meme.store_memes(subreddits);
@@ -41,13 +38,11 @@ schedule.scheduleJob('0 14 * * *', function() {
 
 
 // Runs once a day to delete any repeat memes
-// var delete_duplicate_memes_job =
 schedule.scheduleJob('05 14 * * *', function() {
     store_meme.delete_duplicates();
 });
 
 // This is where Gary will handle all the messages coming in
-
 client.on('message', (receivedMessage) => {
     // Prevent bot from responding to its own messages
     if (receivedMessage.author == client.user) {
@@ -62,7 +57,7 @@ client.on('message', (receivedMessage) => {
         console.log('Replying to message with default reply');
     }
     // Handle different Commands
-    if (receivedMessage.content.startsWith('!')) {
+    if (receivedMessage.content.startsWith(config.prefix)) {
         try {
             processCommand(receivedMessage);
         }
@@ -90,7 +85,8 @@ function processCommand(receivedMessage) {
 
     let argument_list = new Array();
     // it will look at a response like !2d8 and figure out that it wants 2 8 sided dice rolled
-    if (argument_list = primaryCommand.match(/(\d*)(d)(\d*)/)) {
+    if (primaryCommand.match(/(\d*)(d)(\d*)/)) {
+        argument_list = primaryCommand.match(/(\d*)(d)(\d*)/);
         console.log('Argument List' + argument_list);
         if (argument_list.length == 4 && argument_list[2] == 'd') {
             if (argument_list[1] != '') {
