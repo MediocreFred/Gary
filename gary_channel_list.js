@@ -1,17 +1,18 @@
-const Discord = require('discord.js')
-const client = new Discord.Client()
+const Discord = require('discord.js');
+const client = new Discord.Client();
 
 client.on('ready', () => {
     // List servers the bot is connected to
-    console.log("Servers:")
+    console.log('Servers:');
     client.guilds.forEach((guild) => {
-        console.log(" - " + guild.name)
+        console.log(' - ' + guild.name);
 
         // List all channels
         guild.channels.forEach((channel) => {
-            console.log(` -- ${channel.name} (${channel.type}) - ${channel.id}`)
-        })
-    })
-})
+            console.log(` -- ${channel.name} (${channel.type}) - ${channel.id}`);
+        });
+    });
+});
 
-client.login(/*Client Token Goes Here*/)
+// Client Token Goes Here
+client.login();
