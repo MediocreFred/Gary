@@ -1,6 +1,9 @@
 module.exports = {
     name: 'kick',
     description: 'Kicks a user?',
+    usage: '<user>',
+    guildOnly: true,
+    args: true,
     execute(message, args) {
         if (!message.mentions.users.size) {
             return message.reply('you need to tag a user in order to kick them!');
