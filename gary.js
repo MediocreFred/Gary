@@ -14,7 +14,7 @@ client.login(config.token);
 const schedule = require('node-schedule');
 const meme = require('./commands/post_meme.js');
 
-schedule.scheduleJob('15 11 * * *', function() {
+schedule.scheduleJob('0 10 * * *', function() {
     const embed = new Discord.MessageEmbed();
     meme.post_scheduled_meme(client, embed, 'LotRMemes');
 });
