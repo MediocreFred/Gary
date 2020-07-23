@@ -1,4 +1,4 @@
-const config = require('./config.json');
+const config = require('../config.json');
 module.exports = {
     post_scheduled_meme : function(client, embed, subreddit) {
         const request = require('request');
@@ -28,7 +28,7 @@ module.exports = {
             const post_title = data['data']['children'][index]['data']['title'].replace(/['"]+/g, '');
 
             // Save the meme
-            fs.appendFileSync(path.resolve(__dirname, 'memeData', subreddit + '.txt'), '\n' + post_image_url);
+            fs.appendFileSync(path.resolve(__dirname, '../memeData', subreddit + '.txt'), '\n' + post_image_url);
 
             // Post the meme
             // Place known channel ID in list below
@@ -66,8 +66,7 @@ module.exports = {
             // files can be found in the directory 'memeData'
             const files = ['Animemes.txt', 'DnDMemes.txt', 'Memes.txt', 'TrippinThroughTime.txt', 'DankMemes.txt', 'LotRMemes.txt', 'PrequelMemes.txt'];
             const file_selection = files[Math.floor(Math.random() * files.length)];
-
-            const memes = fs.readFileSync(path.resolve(__dirname, 'memeData', file_selection)).toString().split('\n');
+            const memes = fs.readFileSync(path.resolve(__dirname, '../memeData', file_selection)).toString().split('\n');
             let meme = '';
             while(meme == '') {
                 meme = memes[Math.floor(Math.random() * memes.length)];

@@ -12,9 +12,9 @@ client.login(config.token);
 
 // This is where Gary will post a meme everyday
 const schedule = require('node-schedule');
-const meme = require('./post_meme.js');
+const meme = require('./commands/post_meme.js');
 
-schedule.scheduleJob('0 10 * * *', function() {
+schedule.scheduleJob('15 11 * * *', function() {
     const embed = new Discord.MessageEmbed();
     meme.post_scheduled_meme(client, embed, 'LotRMemes');
 });
@@ -29,7 +29,7 @@ schedule.scheduleJob('0 16 * * *', function() {
     meme.post_scheduled_meme(client, embed, 'DnDMemes');
 });
 
-const store_meme = require('./store_meme.js');
+const store_meme = require('./commands/store_meme.js');
 
 schedule.scheduleJob('0 14 * * *', function() {
     const subreddits = ['Animemes', 'DankMemes', 'DnDMemes', 'LotRMemes', 'Memes', 'PrequelMemes', 'TrippinThroughTime'];
