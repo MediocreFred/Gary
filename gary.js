@@ -43,23 +43,23 @@ schedule.scheduleJob('05 14 * * *', function() {
 });
 
 // This is where Gary will handle all the messages coming in
-client.on('message', (receivedMessage) => {
+client.on('message', (message) => {
     // Prevent bot from responding to its own messages
-    if (receivedMessage.author == client.user) {
+    if (message.author.bot) {
         return;
     }
 
     // Check if the bot's user was tagged in the message
-    if (receivedMessage.content.includes(client.user.toString())) {
-        console.log(receivedMessage.author.toString(), receivedMessage.content);
+    if (message.content.includes(client.user.toString())) {
+        console.log(message.author.toString(), message.content);
         // Send acknowledgement message
-        receivedMessage.channel.send('Thanks, bro!');
+        message.reply('thanks, man!');
         console.log('Replying to message with default reply');
     }
     // Handle different Commands
-    if (receivedMessage.content.startsWith(config.prefix)) {
+    if (message.content.startsWith(config.prefix)) {
         try {
-            processCommand(receivedMessage);
+            processCommand(message);
         }
         catch(e) {
             console.log(e);
@@ -70,11 +70,11 @@ client.on('message', (receivedMessage) => {
 
 // This is where Gary will process commands received via messages
 
-function processCommand(receivedMessage) {
+function processCommand(message) {
     // Remove the leading exclamation mark
-    const fullCommand = receivedMessage.content.substr(1);
+    const fullCommand = message.content.substr(1);
     // Split the message up in to pieces for each space
-    const splitCommand = fullCommand.split(' ');
+    const splitCommand = fullCommand.split(/ +/);
     // The first word directly after the exclamation is the command
     const primaryCommand = splitCommand[0];
     // All other words are arguments/parameters/options for the command
@@ -93,35 +93,50 @@ function processCommand(receivedMessage) {
                 argument_list[1] = parseInt(argument_list[1]);
             }
             argument_list[3] = parseInt(argument_list[3]);
-            rollDiceCommand(argument_list, receivedMessage);
+            rollDiceCommand(argument_list, message);
         }
     }
     else if (primaryCommand == 'meme') {
         // command to post a random meme
         const embed = new Discord.MessageEmbed();
-        meme.post_random_meme(receivedMessage.channel, embed);
+        meme.post_random_meme(message.channel, embed);
+    }
+    else if (primaryCommand == 'beep') {
+        message.channel.send('Boop');
+    }
+    else if (message.content === `${config.prefix}server`) {
+        message.channel.send(`Server name: ${message.guild.name}\nTotal members: ${message.guild.memberCount}`);
+    }
+    else if (primaryCommand === 'kick') {
+        // grab the "first" mentioned user from the message
+        // this will return a `User` object, just like `message.author`
+        if (!message.mentions.users.size) {
+            return message.reply('you need to tag a user in order to kick them!');
+        }
+        const taggedUser = message.mentions.users.first();
+        message.channel.send(`Uh oh! What did you do this time? Don't make me kick you, ${taggedUser.username}!`);
     }
     else {
-        receivedMessage.channel.send('I don\'t understand the command. Try `!d20`, `!2d8`, or `!meme`.');
+        message.channel.send('I don\'t understand the command. Try `!d20`, `!2d8`, or `!meme`.');
     }
 }
 
-function rollDiceCommand(argument_list, receivedMessage) {
+function rollDiceCommand(argument_list, message) {
     try {
         if (typeof (argument_list[1]) == 'number' && argument_list[1] != '' && typeof (argument_list[3]) == 'number') {
             const rolls = new Array();
             for (let i = 0; i < argument_list[1]; i++) {
                 rolls.push(Math.floor((Math.random() * argument_list[3]) + 1));
             }
-            receivedMessage.channel.send('You rolled ' + rolls);
+            message.channel.send('You rolled ' + rolls);
         }
         else if (typeof (argument_list[1]) != 'number' && typeof (argument_list[3]) == 'number') {
-            receivedMessage.channel.send('You rolled a ' + Math.floor((Math.random() * argument_list[3]) + 1));
+            message.channel.send('You rolled a ' + Math.floor((Math.random() * argument_list[3]) + 1));
         }
     }
     catch(err) {
         console.log('Error handling command request');
         console.log(err.stack);
-        receivedMessage.channel.send('Something is wrong here. Might be me, might be you, I dunno...');
+        message.channel.send('Something is wrong here. Might be me, might be you, I dunno...');
     }
 }
