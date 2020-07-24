@@ -1,6 +1,7 @@
 module.exports = {
     name: 'meme',
     description: 'Posts a random meme',
+    cooldown: 10,
     execute(message, args) {
         message.channel.send('Meme!');
     },
