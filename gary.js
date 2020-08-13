@@ -71,8 +71,42 @@ client.on('message', (message) => {
     }
     catch (error) {
         console.error(error);
-        message.reply('there was an error trying to execute that command!');
+        return message.reply('there was an error trying to execute that command!');
     }
 });
 
-client.login(token);
+// This is stuff that needs to be fixed to match the new version
+
+// This is where Gary will post a meme everyday
+const schedule = require('node-schedule');
+const meme = require('./commands/post_meme.js');
+
+schedule.scheduleJob('0 10 * * *', function() {
+    const embed = new Discord.MessageEmbed();
+    meme.execute(client, embed, 'LotRMemes');
+});
+
+schedule.scheduleJob('0 13 * * *', function() {
+    const embed = new Discord.MessageEmbed();
+    meme.execute(client, embed, 'TrippinThroughTime');
+});
+
+schedule.scheduleJob('36 15 * * *', function() {
+    const embed = new Discord.MessageEmbed();
+    meme.execute(client, embed, 'DnDMemes');
+});
+
+const store_meme = require('./commands/store_meme.js');
+
+schedule.scheduleJob('0 14 * * *', function() {
+    const subreddits = ['Animemes', 'DankMemes', 'DnDMemes', 'LotRMemes', 'Memes', 'PrequelMemes', 'TrippinThroughTime'];
+    store_meme.execute(subreddits);
+});
+
+
+// Runs once a day to delete any repeat memes
+schedule.scheduleJob('05 14 * * *', function() {
+    store_meme.delete_duplicates();
+});
+
+return client.login(token);

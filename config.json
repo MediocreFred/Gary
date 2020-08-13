@@ -1,5 +1,5 @@
 {
-    "token": "Client token goes here",
-    "channels": ["channel", "ids", "here"],
+    "token": "NTcwMjc0NzY4MjE3OTY0NTQ2.XL8zww.p_znM0Q8XZtkcE_wybL4QnvjFGQ",
+    "legacy_channels": ["735677759011029083", "2789352398724"],
     "prefix": "!"
 }
