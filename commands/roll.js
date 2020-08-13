@@ -9,17 +9,17 @@ module.exports = {
     args: true,
     cooldown: 1,
     execute(message, args) {
-        if (re.test(args) && args.length == 1) {
+        if (re.test(args) && args.length === 1) {
             const args_list = args[0].split('d');
-            // determine if it is multple dice or a single die
-            if ((args_list[0] != '') && (parseInt(args_list[0]) <= 100)) {
-                const rolls = new Array();
+            // determine if it is multiple dice or a single die
+            if ((args_list[0] !== '') && (parseInt(args_list[0]) <= 100)) {
+                const rolls = [];
                 for (let i = 0; i < args_list[0]; i++) {
                     rolls.push(Math.floor((Math.random() * args_list[1]) + 1));
                 }
                 message.channel.send('You rolled ' + rolls);
             }
-            else if (args_list[0] == '') {
+            else if (args_list[0] === '') {
                 message.channel.send('You rolled a ' + Math.floor((Math.random() * args_list[1]) + 1));
             }
             else { message.channel.send('Too high of a number'); }

@@ -17,7 +17,7 @@ module.exports = {
             const data = JSON.parse(body);
             let index = 0;
             // this loops through to find the first non-text post
-            while (data['data']['children'][index]['data']['is_self'] != false && data['data']['children'][index]['data']['over_18'] != false && index < 10) {
+            while (data['data']['children'][index]['data']['is_self'] !== false && data['data']['children'][index]['data']['over_18'] !== false && index < 10) {
                 index = index + 1;
             }
             // get the post url
@@ -34,7 +34,7 @@ module.exports = {
 
             // Post the meme
             // Place known channel ID in list below
-            const channel_list = config.channels;
+            const channel_list = config.legacy_channels;
             for (const channel of channel_list) {
                 const generalChannel = client.channels.cache.get(channel);
                 try {
