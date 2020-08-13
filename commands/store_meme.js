@@ -1,5 +1,7 @@
 module.exports = {
-    store_memes: function(subreddits) {
+    name: 'store memes',
+    description: 'Store memes the top memes from the day for the selected subreddits',
+    execute(subreddits) {
         const request = require('request');
         const fs = require('fs');
         const path = require('path');
