@@ -91,7 +91,7 @@ schedule.scheduleJob('0 13 * * *', function() {
     meme.execute(client, embed, 'TrippinThroughTime');
 });
 
-schedule.scheduleJob('36 15 * * *', function() {
+schedule.scheduleJob('0 16 * * *', function() {
     const embed = new Discord.MessageEmbed();
     meme.execute(client, embed, 'DnDMemes');
 });

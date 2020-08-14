@@ -15,7 +15,6 @@
     "nodemon": "^2.0.4",
     "python-shell": "^2.0.1",
     "request": "^2.88.2",
-    "sodium": "^3.0.2",
     "utf-8-validate": "^5.0.2",
     "worker-threads": "^1.0.0",
     "zlib-sync": "^0.1.7"

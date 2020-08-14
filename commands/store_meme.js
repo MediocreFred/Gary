@@ -1,3 +1,5 @@
+require('log-timestamp');
+
 module.exports = {
     name: 'store memes',
     description: 'Store memes the top memes from the day for the selected subreddits',

@@ -1,4 +1,6 @@
 const config = require('../config.json');
+require('log-timestamp');
+
 module.exports = {
     name: 'post top meme',
     description: 'posts',

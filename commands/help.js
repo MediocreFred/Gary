@@ -1,4 +1,5 @@
 const { prefix } = require('../config.json');
+require('log-timestamp');
 
 module.exports = {
     name: 'help',

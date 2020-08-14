@@ -15,8 +15,8 @@ module.exports = {
     execute(message, args) {
         // message.channel.send('Meme!');
         let meme = '';
-        while(meme == '') {
-            meme = memes[Math.floor(Math.random() * memes.length)];
+        while(meme === '') {
+            meme = memes[Math.floor(Math.random() * memes.length)].replace(/[\n\r]/g, '');
         }
 
         // format the post
@@ -24,7 +24,9 @@ module.exports = {
             .setTitle('Random meme from ' + 'r/' + file_selection.slice(0, -4))
             .setColor(0xFF0000)
             .setImage(meme);
-        message.channel.send(messageEmbed);
-        console.log('Posted a random meme, ' + meme + ', from ' + file_selection);
+
+        message.channel.send(messageEmbed).then(() => {
+            console.log('Posted a random meme, ' + meme + ', from ' + file_selection);
+        });
     },
 };
