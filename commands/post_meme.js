@@ -1,6 +1,10 @@
-const config = require('./config.json');
+const config = require('../config.json');
+require('log-timestamp');
+
 module.exports = {
-    post_scheduled_meme : function(client, embed, subreddit) {
+    name: 'post top meme',
+    description: 'posts',
+    execute(client, embed, subreddit) {
         const request = require('request');
         const fs = require('fs');
         const path = require('path');
@@ -15,7 +19,7 @@ module.exports = {
             const data = JSON.parse(body);
             let index = 0;
             // this loops through to find the first non-text post
-            while (data['data']['children'][index]['data']['is_self'] != false && data['data']['children'][index]['data']['over_18'] != false && index < 10) {
+            while (data['data']['children'][index]['data']['is_self'] !== false && data['data']['children'][index]['data']['over_18'] !== false && index < 10) {
                 index = index + 1;
             }
             // get the post url
@@ -28,11 +32,11 @@ module.exports = {
             const post_title = data['data']['children'][index]['data']['title'].replace(/['"]+/g, '');
 
             // Save the meme
-            fs.appendFileSync(path.resolve(__dirname, 'memeData', subreddit + '.txt'), '\n' + post_image_url);
+            fs.appendFileSync(path.resolve(__dirname, '../memeData', subreddit + '.txt'), '\n' + post_image_url);
 
             // Post the meme
             // Place known channel ID in list below
-            const channel_list = config.channels;
+            const channel_list = config.legacy_channels;
             for (const channel of channel_list) {
                 const generalChannel = client.channels.cache.get(channel);
                 try {
@@ -55,33 +59,5 @@ module.exports = {
                 }
             }
         });
-    },
-
-    post_random_meme : function(channel, embed) {
-        try {
-            // this function will be used to post a random meme from the database
-            const fs = require('fs');
-            const path = require('path');
-
-            // files can be found in the directory 'memeData'
-            const files = ['Animemes.txt', 'DnDMemes.txt', 'Memes.txt', 'TrippinThroughTime.txt', 'DankMemes.txt', 'LotRMemes.txt', 'PrequelMemes.txt'];
-            const file_selection = files[Math.floor(Math.random() * files.length)];
-
-            const memes = fs.readFileSync(path.resolve(__dirname, 'memeData', file_selection)).toString().split('\n');
-            let meme = '';
-            while(meme == '') {
-                meme = memes[Math.floor(Math.random() * memes.length)];
-            }
-
-            // format the post
-            embed.setTitle('Random meme from ' + file_selection.slice(0, -4));
-            embed.setColor(0xFF0000);
-            embed.setImage(meme);
-            channel.send(embed);
-            console.log('Posted a random meme, ' + meme + ', from ' + file_selection);
-        }
-        catch(e) {
-            console.log('Error posting the random meme:', e.stack);
-        }
     },
 };

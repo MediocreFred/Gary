@@ -1,5 +1,9 @@
+require('log-timestamp');
+
 module.exports = {
-    store_memes: function(subreddits) {
+    name: 'store memes',
+    description: 'Store memes the top memes from the day for the selected subreddits',
+    execute(subreddits) {
         const request = require('request');
         const fs = require('fs');
         const path = require('path');
@@ -15,7 +19,7 @@ module.exports = {
                 const data = JSON.parse(body);
                 let index = 0;
                 // this loops through to find the first non-text post
-                while (data['data']['children'][index]['data']['is_self'] != false && data['data']['children'][index]['data']['over_18'] != false && index < 10) {
+                while (data['data']['children'][index]['data']['is_self'] !== false && data['data']['children'][index]['data']['over_18'] !== false && index < 10) {
                     index = index + 1;
                 }
                 // get the image url
