@@ -4,8 +4,9 @@ const re = new RegExp('^[0-9]*d[0-9]+');
 
 module.exports = {
     name: 'roll',
+    aliases: ['r'],
     description: 'Rolls as many dice of as many sides as you want',
-    usage: '<#dice>d<#sides>',
+    usage: 'd20 or 2d6',
     args: true,
     cooldown: 1,
     execute(message, args) {
@@ -31,25 +32,3 @@ module.exports = {
         }
     },
 };
-
-/*
-function rollDiceCommand(argument_list, message) {
-    try {
-        if (typeof (argument_list[1]) == 'number' && argument_list[1] != '' && typeof (argument_list[3]) == 'number') {
-            const rolls = new Array();
-            for (let i = 0; i < argument_list[1]; i++) {
-                rolls.push(Math.floor((Math.random() * argument_list[3]) + 1));
-            }
-            message.channel.send('You rolled ' + rolls);
-        }
-        else if (typeof (argument_list[1]) != 'number' && typeof (argument_list[3]) == 'number') {
-            message.channel.send('You rolled a ' + Math.floor((Math.random() * argument_list[3]) + 1));
-        }
-    }
-    catch(err) {
-        console.log('Error handling command request');
-        console.log(err.stack);
-        message.channel.send('Something is wrong here. Might be me, might be you, I dunno...');
-    }
-}
-*/
