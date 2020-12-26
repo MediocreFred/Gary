@@ -25,7 +25,7 @@ module.exports = {
                 // get the image url
                 const post_image_url = data['data']['children'][index]['data']['url'].replace(/['"]+/g, '');
                 // Save the meme
-                fs.appendFileSync(path.resolve(__dirname, 'memeData', subreddit + '.txt'), '\n' + post_image_url);
+                fs.appendFileSync(path.resolve(__dirname, '../memeData', subreddit + '.txt'), '\n' + post_image_url);
                 if (err) throw err;
                 console.log(data);
             });
@@ -37,20 +37,20 @@ module.exports = {
     // This function will look to see if there are any duplicate memes within the meme database and remove one of them
         const fs = require('fs');
         const path = require('path');
-        console.log(path.resolve(__dirname, 'memeData'));
+        console.log(path.resolve(__dirname + '/../memeData'));
         // Get the files in the meme directory
         // var files;
-        fs.readdir(path.resolve(__dirname, 'memeData'), function(err, items) {
+        fs.readdir(path.resolve(__dirname + '/../memeData'), function(err, items) {
         // For each of the files in the database
             for (let i = 0; i < items.length; i++) {
             // go through the file and find duplicates
-                const buf = fs.readFileSync(path.resolve(__dirname, 'memeData', items[i]));
+                const buf = fs.readFileSync(path.resolve(__dirname + '/../memeData', items[i]));
                 const links = new Set();
                 buf.toString().split(/\n/).forEach(function(line) {
                     links.add(line);
                 });
 
-                const writeStream = fs.createWriteStream(path.resolve(__dirname, 'memeData', items[i]));
+                const writeStream = fs.createWriteStream(path.resolve(__dirname + '/../memeData', items[i]));
 
                 links.forEach(link => {
                     writeStream.write(link + '\n');

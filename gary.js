@@ -105,7 +105,7 @@ schedule.scheduleJob('0 14 * * *', function() {
 
 
 // Runs once a day to delete any repeat memes
-schedule.scheduleJob('05 14 * * *', function() {
+schedule.scheduleJob('0 23 * * *', function() {
     store_meme.delete_duplicates();
 });
 
