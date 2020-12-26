@@ -11,7 +11,7 @@ module.exports = {
         subreddits.forEach(subreddit => {
             request({
                 headers: {
-                    'User-Agent': 'personal:Gary:v1.1Davout (by /u/broseidon16)',
+                    'User-Agent': 'personal:Gary:v2.0 (by /u/broseidon16)',
                 },
                 uri: 'https://www.reddit.com/r/' + subreddit + '/top/.json?sort=top&t=day&limit=10',
                 method: 'GET',

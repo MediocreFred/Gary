@@ -79,7 +79,7 @@ client.on('message', (message) => {
 
 // This is where Gary will post a meme everyday
 const schedule = require('node-schedule');
-const meme = require('./commands/post_meme.js');
+const meme = require('./privateCommands/post_meme.js');
 
 schedule.scheduleJob('0 10 * * *', function() {
     const embed = new Discord.MessageEmbed();
@@ -96,7 +96,7 @@ schedule.scheduleJob('0 16 * * *', function() {
     meme.execute(client, embed, 'DnDMemes');
 });
 
-const store_meme = require('./commands/store_meme.js');
+const store_meme = require('./privateCommands/store_meme.js');
 
 schedule.scheduleJob('0 14 * * *', function() {
     const subreddits = ['Animemes', 'DankMemes', 'DnDMemes', 'LotRMemes', 'Memes', 'PrequelMemes', 'TrippinThroughTime'];
