@@ -21,7 +21,7 @@ module.exports = {
                 message.channel.send('You rolled ' + rolls);
             }
             else if (args_list[0] === '') {
-                message.channel.send('You rolled a ' + Math.floor((Math.random() * args_list[1]) + 1));
+                message.channel.send('You rolled a ' + Math.floor((Math.random() * args_list[1]) + 1) + ' ');
             }
             else { message.channel.send('Too high of a number'); }
 
