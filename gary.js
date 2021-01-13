@@ -99,7 +99,7 @@ schedule.scheduleJob('0 16 * * *', function() {
 const store_meme = require('./privateCommands/store_meme.js');
 
 schedule.scheduleJob('0 14 * * *', function() {
-    const subreddits = ['Animemes', 'DankMemes', 'DnDMemes', 'LotRMemes', 'Memes', 'PrequelMemes', 'TrippinThroughTime'];
+    const subreddits = ['DankMemes', 'DnDMemes', 'LotRMemes', 'Memes', 'PrequelMemes', 'TrippinThroughTime'];
     store_meme.execute(subreddits);
 });
 

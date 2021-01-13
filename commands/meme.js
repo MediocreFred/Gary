@@ -4,7 +4,7 @@ const Discord = require('discord.js')
 require('log-timestamp')
 
 // files can be found in the directory 'memeData'
-const files = ['Animemes.txt', 'DnDMemes.txt', 'Memes.txt', 'TrippinThroughTime.txt', 'DankMemes.txt', 'LotRMemes.txt', 'PrequelMemes.txt']
+const files = ['DnDMemes.txt', 'Memes.txt', 'TrippinThroughTime.txt', 'DankMemes.txt', 'LotRMemes.txt', 'PrequelMemes.txt']
 const fileSelection = files[Math.floor(Math.random() * files.length)]
 const memes = fs.readFileSync(path.resolve(__dirname, '../memeData', fileSelection)).toString().split('\n')
 
