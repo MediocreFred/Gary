@@ -3,16 +3,15 @@ const path = require('path')
 const Discord = require('discord.js')
 require('log-timestamp')
 
-// files can be found in the directory 'memeData'
-const files = ['DnDMemes.txt', 'Memes.txt', 'TrippinThroughTime.txt', 'DankMemes.txt', 'LotRMemes.txt', 'PrequelMemes.txt']
-const fileSelection = files[Math.floor(Math.random() * files.length)]
-const memes = fs.readFileSync(path.resolve(__dirname, '../memeData', fileSelection)).toString().split('\n')
-
 module.exports = {
   name: 'meme',
   description: 'Posts a random meme',
   cooldown: 10,
   execute (message, args) {
+    // files can be found in the directory 'memeData'
+    const files = ['DnDMemes.txt', 'Memes.txt', 'TrippinThroughTime.txt', 'DankMemes.txt', 'LotRMemes.txt', 'PrequelMemes.txt']
+    let fileSelection = files[Math.floor(Math.random() * files.length)]
+    let memes = fs.readFileSync(path.resolve(__dirname, '../memeData', fileSelection)).toString().split('\n')
     // message.channel.send('Meme!');
     let meme = ''
     while (meme === '') {
