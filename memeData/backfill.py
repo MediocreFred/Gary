@@ -35,4 +35,3 @@ with open('post_username.txt', 'w') as outfile:
 #get the title of the post
 with open('post_title.txt', 'w') as outfile:
     outfile.write(data['data']['children'][index]['data']['title'].strip('"')) """
-
