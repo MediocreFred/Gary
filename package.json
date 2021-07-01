@@ -6,7 +6,6 @@
   "dependencies": {
     "bufferutil": "^4.0.1",
     "discord.js": "^12.5.3",
-    "erlpack": "github:discordapp/erlpack",
     "glob-parent": ">=5.1.2",
     "hosted-git-info": ">=2.8.9",
     "iconv": "^3.0.0",
