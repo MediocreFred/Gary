@@ -1,5 +1,6 @@
 require('log-timestamp');
 
+// regex that captures the accepted format (example: 1d20)
 const re = new RegExp('^[0-9]*d[0-9]+');
 
 module.exports = {
@@ -10,22 +11,48 @@ module.exports = {
     args: true,
     cooldown: 1,
     execute(message, args) {
+        console.log(message.author.id, '(' + message.author.username + ')', 'called the !roll command with the arguments ' + args);
+        // check the arguments are correct
         if (re.test(args) && args.length === 1) {
             const argsList = args[0].split('d');
-            // determine if it is multiple dice or a single die
-            if ((argsList[0] !== '') && (parseInt(argsList[0]) <= 100)) {
-                const rolls = [];
-                for (let i = 0; i < argsList[0]; i++) {
-                    rolls.push(Math.floor((Math.random() * argsList[1]) + 1));
-                }
-                message.channel.send('You rolled ' + rolls);
-            }
-            else if (argsList[0] === '') {
-                message.channel.send('You rolled a ' + Math.floor((Math.random() * argsList[1]) + 1) + ' ');
-            }
-            else { message.channel.send('Too high of a number'); }
+            const numRolls = argsList[0];
+            const numSides = argsList[1];
 
-            console.log(message.author.id, '(' + message.author.username + ')', 'called the !roll command with the arguments ' + argsList);
+            // keep track of all the rolls
+            const rollResults = [];
+
+            // make sure the request is for 100 rolls or less for performance reasons
+            if ((numRolls !== '') && (parseInt(numRolls) <= 100)) {
+                // roll the die for each of the requested number of rolls and add to list of results
+                for (let i = 0; i < numRolls; i++) {
+                    rollResults.push(Math.floor((Math.random() * numSides) + 1));
+                }
+            }
+            else if (numRolls === '') {
+                rollResults.push(Math.floor((Math.random() * numSides) + 1));
+            }
+            else { message.channel.send('Too many rolls requested! (must be <= 100)'); }
+
+            // prepare the roll results for posting
+            if (rollResults.length != 0) {
+                // sort the results in descending order for better readability
+                rollResults.sort((a, b) => b - a);
+                // extract each of the rolls in order to make the results pretty for the message
+                let prettyResults = String('[');
+                for (let i = 0; i < rollResults.length; i++) {
+                    prettyResults += rollResults[i];
+                    if (i != rollResults.length - 1) {
+                        prettyResults += ', ';
+                    }
+                    else { prettyResults += ']'; }
+                }
+
+                // get the total of all the dice rolled
+                const rollTotal = rollResults.reduce((a, b) => a + b);
+
+                message.channel.send(message.author.username + '\'s ' + args
+                + ' results: ' + '`' + prettyResults + '`\n' + 'Total: ' + '`' + rollTotal + '`');
+            }
         }
         else {
             message.channel.send('Correct usage is <#dice>d<#sides>');
