@@ -12,6 +12,10 @@ module.exports = {
     cooldown: 1,
     execute(message, args) {
         console.log(message.author.id, '(' + message.author.username + ')', 'called the !roll command with the arguments ' + args);
+
+        // make it appear that the bot is typing before responding
+        message.channel.startTyping();
+
         // check the arguments are correct
         if (re.test(args) && args.length === 1) {
             const argsList = args[0].split('d');
@@ -50,6 +54,9 @@ module.exports = {
                 // get the total of all the dice rolled
                 const rollTotal = rollResults.reduce((a, b) => a + b);
 
+                // stop typing
+                message.channel.stopTyping();
+
                 message.channel.send(message.author.username + '\'s ' + args
                 + ' results: ' + '`' + prettyResults + '`\n' + 'Total: ' + '`' + rollTotal + '`');
             }
@@ -57,5 +64,7 @@ module.exports = {
         else {
             message.channel.send('Correct usage is <#dice>d<#sides>');
         }
+        // stop typing just in case it started and didn't stop elsewhere
+        message.channel.stopTyping();
     },
 };
