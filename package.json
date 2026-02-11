@@ -1,8 +1,4 @@
 {
-  "name": "gary_packages",
-  "version": "2.0.0",
-  "description": "This package is used for Gary, my DnD Discord bot.",
-  "main": "gary.js",
   "dependencies": {
     "axios": "^1.7.0",
     "bufferutil": "^4.1.0",
@@ -24,20 +20,24 @@
     "ws": "^8.18.0",
     "zlib-sync": "^0.1.9"
   },
+  "description": "This package is used for Gary, my DnD Discord bot.",
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "chai": "^5.0.0",
     "mocha": "^11.1.0"
   },
-  "scripts": {
-    "start": "node gary.js",
-    "dev": "nodemon gary.js",
-    "test": "mocha",
-    "lint": "biome check .",
-    "format": "biome format --write ."
-  },
   "engines": {
     "node": ">=22"
   },
-  "license": "ISC"
+  "license": "ISC",
+  "main": "gary.js",
+  "name": "gary_packages",
+  "scripts": {
+    "dev": "nodemon gary.js",
+    "format": "biome format --write .",
+    "lint": "biome check .",
+    "start": "node gary.js",
+    "test": "mocha"
+  },
+  "version": "2.0.0"
 }
