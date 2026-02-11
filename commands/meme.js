@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const Discord = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 require('log-timestamp');
 
 module.exports = {
@@ -19,12 +19,12 @@ module.exports = {
         }
 
         // format the post
-        const messageEmbed = new Discord.MessageEmbed()
+        const messageEmbed = new EmbedBuilder()
             .setTitle('Random meme from ' + 'r/' + fileSelection.slice(0, -4))
             .setColor(0xFF0000)
             .setImage(meme);
 
-        message.channel.send(messageEmbed).then(() => {
+        message.channel.send({ embeds: [messageEmbed] }).then(() => {
             console.log('Posted a random meme, ' + meme + ', from ' + fileSelection);
         });
     },

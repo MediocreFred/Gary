@@ -1,15 +1,13 @@
 require('log-timestamp');
 
 module.exports = {
-    name: 'message',
+    name: 'messageCreate',
     execute(message) {
         console.log(`${message.author.tag} in #${message.channel.name} sent: ${message.content}`);
 
-        if (message.content.includes(message.client.user['id'])) {
-
+        if (message.content.includes(message.client.user.id)) {
             // make bot appear to be typing for a little before answering
-            message.channel.startTyping();
-            message.channel.stopTyping();
+            if (message.channel?.sendTyping) message.channel.sendTyping();
 
             console.log(message.author.toString(), message.content);
 
@@ -19,8 +17,7 @@ module.exports = {
         }
         if ((message.content === 'Yikes') || (message.content === 'yikes')) {
             // make bot appear to be typing for a little before answering
-            message.channel.startTyping();
-            message.channel.stopTyping();
+            if (message.channel?.sendTyping) message.channel.sendTyping();
 
             message.channel.send('Yikes indeed!');
             console.log('Yikes');

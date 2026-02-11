@@ -14,7 +14,7 @@ module.exports = {
         console.log(message.author.id, '(' + message.author.username + ')', 'called the !roll command with the arguments ' + args);
 
         // make it appear that the bot is typing before responding
-        message.channel.startTyping();
+        if (message.channel?.sendTyping) message.channel.sendTyping();
 
         // check the arguments are correct
         if (re.test(args) && args.length === 1) {
@@ -54,8 +54,7 @@ module.exports = {
                 // get the total of all the dice rolled
                 const rollTotal = rollResults.reduce((a, b) => a + b);
 
-                // stop typing
-                message.channel.stopTyping();
+                // stop typing (sendTyping is single-shot, so nothing to stop)
 
                 message.channel.send(message.author.username + '\'s ' + args
                 + ' results: ' + '`' + prettyResults + '`\n' + 'Total: ' + '`' + rollTotal + '`');
@@ -64,7 +63,6 @@ module.exports = {
         else {
             message.channel.send('Correct usage is <#dice>d<#sides>');
         }
-        // stop typing just in case it started and didn't stop elsewhere
-        message.channel.stopTyping();
+        // sendTyping is single-shot; nothing to stop here
     },
 };
