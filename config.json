@@ -1,5 +1,5 @@
 {
-    "token": "Client token goes here",
-    "legacy_channels": ["channel", "ids", "here"],
-    "prefix": "!"
+  "legacy_channels": ["channel", "ids", "here"],
+  "prefix": "!",
+  "token": "Client token goes here"
 }

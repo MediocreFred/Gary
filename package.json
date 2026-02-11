@@ -1,57 +1,43 @@
 {
-  "name": "gary_packages",
-  "version": "2.0.0",
-  "description": "This package is used for Gary, my DnD Discord bot.",
-  "main": "gary.js",
   "dependencies": {
-    "bufferutil": "^4.0.0",
-    "discord.js": "^14.0.0",
-    "glob-parent": "^5.1.2",
-    "hosted-git-info": "^4.0.0",
+    "axios": "^1.7.0",
+    "bufferutil": "^4.1.0",
+    "discord.js": "^14.17.0",
+    "glob-parent": "^6.0.2",
+    "hosted-git-info": "^8.0.0",
     "iconv": "^3.0.0",
-    "libsodium": "^0.7.8",
-    "libsodium-wrappers": "^0.7.8",
+    "libsodium": "^0.7.15",
+    "libsodium-wrappers": "^0.7.15",
     "lodash": "^4.17.21",
     "log-timestamp": "^0.3.0",
-    "node-schedule": "^2.0.0",
-    "nodemon": "^2.0.0",
-    "normalize-url": "^7.0.0",
-    "pm2": "^5.0.0",
-    "python-shell": "^3.0.0",
-    "request": "^2.88.2",
-    "utf-8-validate": "^5.0.0",
+    "node-schedule": "^2.1.1",
+    "nodemon": "^3.1.0",
+    "normalize-url": "^8.0.1",
+    "pm2": "^5.4.0",
+    "python-shell": "^5.0.0",
+    "utf-8-validate": "^6.0.6",
     "worker-threads": "^1.0.0",
-    "ws": "^8.0.0",
-    "zlib-sync": "^0.1.7"
+    "ws": "^8.18.0",
+    "zlib-sync": "^0.1.9"
   },
+  "description": "This package is used for Gary, my DnD Discord bot.",
   "devDependencies": {
-    "chai": "^4.3.0",
-    "eslint": "^8.0.0",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.0.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.0.0",
-    "eslint-plugin-standard": "^5.0.0",
-    "mocha": "^11.7.5"
-  },
-  "scripts": {
-    "test": "mocha"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MediocreFred/Gary.git"
-  },
-  "author": "Casey Kalinowski <kalinowski_c@lynchburg.edu>",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/MediocreFred/Gary/issues"
-  },
-  "homepage": "https://github.com/MediocreFred/Gary#readme",
-  "directories": {
-    "test": "test"
+    "@biomejs/biome": "1.9.4",
+    "chai": "^5.0.0",
+    "mocha": "^11.1.0"
   },
   "engines": {
     "node": ">=22"
   },
-  "keywords": []
+  "license": "ISC",
+  "main": "gary.js",
+  "name": "gary_packages",
+  "scripts": {
+    "dev": "nodemon gary.js",
+    "format": "biome format --write .",
+    "lint": "biome check .",
+    "start": "node gary.js",
+    "test": "mocha"
+  },
+  "version": "2.0.0"
 }
