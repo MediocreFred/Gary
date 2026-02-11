@@ -1,6 +1,6 @@
 // const fs = require('fs')
 // const path = require('path')
-const Discord = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const request = require('request');
 require('log-timestamp');
 const apiKey = 'ONH4UU86MGB6IAN3'; // API key required for access to alphavantage stock api
@@ -39,8 +39,7 @@ module.exports = {
                         color = 0xFF0000;
                     }
                     // format the post
-                    const messageEmbed = new Discord.MessageEmbed()
-                    // .setTitle('$' + displaySymbol)
+                    const messageEmbed = new EmbedBuilder()
                         .setColor(color)
                         .addFields(
                             { name: 'Stock Symbol', value: '$' + displaySymbol },
@@ -49,9 +48,9 @@ module.exports = {
                             { name: 'Percent Change', value: changePercent, inline: true },
                         )
                         .setTimestamp()
-                        .setFooter('Info provided through AlphaVantage API');
+                        .setFooter({ text: 'Info provided through AlphaVantage API' });
 
-                    message.channel.send(messageEmbed).then(() => {
+                    message.channel.send({ embeds: [messageEmbed] }).then(() => {
                         console.log('Posted stock information for ' + displaySymbol);
                     });
                 }

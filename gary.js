@@ -1,8 +1,16 @@
 const fs = require('fs');
 const { prefix, token } = require('./config.json');
-const Discord = require('discord.js');
+const { Client, Collection, GatewayIntentBits, Partials, EmbedBuilder } = require('discord.js');
 
-const client = new Discord.Client();
+const client = new Client({
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.DirectMessages
+    ],
+    partials: [Partials.Channel, Partials.Message, Partials.Reaction]
+});
 
 const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
 
@@ -16,7 +24,7 @@ for (const file of eventFiles) {
     }
 }
 
-client.commands = new Discord.Collection();
+client.commands = new Collection();
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
@@ -27,10 +35,10 @@ for (const file of commandFiles) {
     client.commands.set(command.name, command);
 }
 
-const cooldowns = new Discord.Collection();
+const cooldowns = new Collection();
 
 // This is where Gary will handle all the messages coming in
-client.on('message', (message) => {
+client.on('messageCreate', (message) => {
     // Prevent bot from responding to its own messages
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
@@ -42,7 +50,7 @@ client.on('message', (message) => {
 
     if (!command) return;
 
-    if (command.guildOnly && message.channel.type !== 'text') {
+    if (command.guildOnly && !message.guild) {
         return message.reply('I can\'t execute that command inside DMs!');
     }
 
@@ -57,7 +65,7 @@ client.on('message', (message) => {
     }
 
     if (!cooldowns.has(command.name)) {
-        cooldowns.set(command.name, new Discord.Collection());
+        cooldowns.set(command.name, new Collection());
     }
 
     const now = Date.now();
@@ -90,17 +98,17 @@ const schedule = require('node-schedule');
 const meme = require('./privateCommands/post_meme.js');
 
 schedule.scheduleJob('0 10 * * *', function() {
-    const embed = new Discord.MessageEmbed();
+    const embed = new EmbedBuilder();
     meme.execute(client, embed, 'LotRMemes');
 });
 
 schedule.scheduleJob('0 13 * * *', function() {
-    const embed = new Discord.MessageEmbed();
+    const embed = new EmbedBuilder();
     meme.execute(client, embed, 'TrippinThroughTime');
 });
 
 schedule.scheduleJob('0 16 * * *', function() {
-    const embed = new Discord.MessageEmbed();
+    const embed = new EmbedBuilder();
     meme.execute(client, embed, 'DnDMemes');
 });
 
