@@ -1,5 +1,4 @@
 {
-  "legacy_channels": ["channel", "ids", "here"],
   "prefix": "!",
-  "token": "Client token goes here"
+  "token": "YOUR_DISCORD_BOT_TOKEN_HERE"
 }
