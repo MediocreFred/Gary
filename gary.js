@@ -91,38 +91,7 @@ client.on('messageCreate', (message) => {
     }
 });
 
-// This is stuff that needs to be fixed to match the new version
-
-// This is where Gary will post a meme everyday
-const schedule = require('node-schedule');
-const meme = require('./privateCommands/post_meme.js');
-
-schedule.scheduleJob('0 10 * * *', () => {
-    const embed = new EmbedBuilder();
-    meme.execute(client, embed, 'LotRMemes');
-});
-
-schedule.scheduleJob('0 13 * * *', () => {
-    const embed = new EmbedBuilder();
-    meme.execute(client, embed, 'TrippinThroughTime');
-});
-
-schedule.scheduleJob('0 16 * * *', () => {
-    const embed = new EmbedBuilder();
-    meme.execute(client, embed, 'DnDMemes');
-});
-
-const store_meme = require('./privateCommands/store_meme.js');
-
-schedule.scheduleJob('0 14 * * *', () => {
-    const subreddits = ['DankMemes', 'DnDMemes', 'LotRMemes', 'Memes', 'PrequelMemes', 'TrippinThroughTime'];
-    store_meme.execute(subreddits);
-});
-
-
-// Runs once a day to delete any repeat memes
-schedule.scheduleJob('0 23 * * *', () => {
-    store_meme.delete_duplicates();
-});
+const { startScheduler } = require('./scheduler.js');
+startScheduler(client);
 
 return client.login(token);
