@@ -1,26 +1,27 @@
 const { assert } = require("chai");
 const fs = require("node:fs");
 const path = require("node:path");
-const nextCommand = require("../commands/next.js");
-const setNextCommand = require("../commands/setnext.js");
-const setOwnerCommand = require("../commands/setowner.js");
+const nextCommand = require("../src/commands/next.js");
+const setNextCommand = require("../src/commands/setnext.js");
+const setOwnerCommand = require("../src/commands/setowner.js");
 
 const configPath = path.resolve(__dirname, "..", "config.json");
 
 let lastReply = "";
-const mockMessage = {
-  reply: (msg) => {
-    lastReply = msg;
+const makeMockInteraction = ({ userId = "123456789", when = null } = {}) => ({
+  user: { id: userId },
+  options: { getString: (k) => when },
+  reply: (payload) => {
+    if (typeof payload === "string") lastReply = payload;
+    else if (payload?.content) lastReply = payload.content;
+    else lastReply = undefined;
   },
   channel: {
     send: (msg) => {
       lastReply = msg;
     },
   },
-  author: {
-    id: "123456789",
-  },
-};
+});
 
 describe("Error handling", () => {
   it("next should handle config read error", () => {
@@ -29,7 +30,8 @@ describe("Error handling", () => {
       throw new Error("boom");
     };
 
-    nextCommand.execute(mockMessage, []);
+    const mock = makeMockInteraction();
+    nextCommand.execute(mock);
 
     assert.equal(lastReply, "There was an error retrieving the schedule.");
 
@@ -46,31 +48,25 @@ describe("Error handling", () => {
     const origWrite = fs.writeFile;
     fs.writeFile = (p, data, cb) => cb(new Error("disk"));
 
-    const mockWithDone = {
-      ...mockMessage,
-      reply: (msg) => {
-        lastReply = msg;
-        assert.equal(lastReply, "There was an error setting the next session.");
-        fs.writeFile = origWrite;
-        // restore original config
-        fs.writeFileSync(configPath, origConfig, "utf8");
-        done();
-      },
+    const mockWithDone = makeMockInteraction({ when: Math.floor(Date.now() / 1000).toString() });
+    mockWithDone.reply = (payload) => {
+      const m = typeof payload === "string" ? payload : payload.content;
+      lastReply = m;
+      assert.equal(lastReply, "There was an error setting the next session.");
+      fs.writeFile = origWrite;
+      fs.writeFileSync(configPath, origConfig, "utf8");
+      done();
     };
 
-    setNextCommand.execute(mockWithDone, [Math.floor(Date.now() / 1000).toString()]);
+    setNextCommand.execute(mockWithDone);
   });
 
   it("setnext should require owner permission", () => {
-    const mockNonOwner = {
-      ...mockMessage,
-      author: { id: "000000" },
-      reply: (msg) => {
-        lastReply = msg;
-      },
-    };
-
-    setNextCommand.execute(mockNonOwner, [Math.floor(Date.now() / 1000).toString()]);
+    const mockNonOwner = makeMockInteraction({
+      userId: "000000",
+      when: Math.floor(Date.now() / 1000).toString(),
+    });
+    setNextCommand.execute(mockNonOwner);
     assert.equal(lastReply, "Only the owner can set the next session time.");
   });
 
@@ -86,18 +82,16 @@ describe("Error handling", () => {
       throw new Error("disk");
     };
 
-    const mockWithDone = {
-      ...mockMessage,
-      reply: (msg) => {
-        lastReply = msg;
-        assert.equal(lastReply, "There was an error setting the owner.");
-        fs.writeFileSync = origWriteSync;
-        // restore original config
-        fs.writeFileSync(configPath, origConfig, "utf8");
-        done();
-      },
+    const mockWithDone = makeMockInteraction();
+    mockWithDone.reply = (payload) => {
+      const m = typeof payload === "string" ? payload : payload.content;
+      lastReply = m;
+      assert.equal(lastReply, "There was an error setting the owner.");
+      fs.writeFileSync = origWriteSync;
+      fs.writeFileSync(configPath, origConfig, "utf8");
+      done();
     };
 
-    setOwnerCommand.execute(mockWithDone, []);
+    setOwnerCommand.execute(mockWithDone);
   });
 });
