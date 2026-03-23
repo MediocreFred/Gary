@@ -31,13 +31,13 @@
     "node": ">=22"
   },
   "license": "ISC",
-  "main": "gary.js",
+  "main": "src/index.js",
   "name": "gary_packages",
   "scripts": {
-    "dev": "nodemon gary.js",
+    "dev": "nodemon src/index.js",
     "format": "biome format --write .",
     "lint": "biome check .",
-    "start": "node gary.js",
+    "start": "node src/index.js",
     "test": "mocha"
   },
   "version": "2.0.0"

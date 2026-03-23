@@ -7,3 +7,5 @@ node_modules/
 .eslintrc.js
 .idea/
 .nyc_output/
+.local-info
+
