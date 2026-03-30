@@ -4,12 +4,18 @@ const path = require("node:path");
 const nextCommand = require("../src/commands/next.js");
 const setNextCommand = require("../src/commands/setnext.js");
 const setOwnerCommand = require("../src/commands/setowner.js");
+let { getSettings, setSettings, setBotSetting } = require("../db/dal.js");
 
 const configPath = path.resolve(__dirname, "..", "config.json");
 
 let lastReply = "";
-const makeMockInteraction = ({ userId = "123456789", when = null } = {}) => ({
+const makeMockInteraction = ({
+  userId = "123456789",
+  when = null,
+  guildId = "test-guild",
+} = {}) => ({
   user: { id: userId },
+  guildId,
   options: { getString: (k) => when },
   reply: (payload) => {
     if (typeof payload === "string") lastReply = payload;
@@ -25,8 +31,8 @@ const makeMockInteraction = ({ userId = "123456789", when = null } = {}) => ({
 
 describe("Error handling", () => {
   it("next should handle config read error", () => {
-    const orig = fs.readFileSync;
-    fs.readFileSync = () => {
+    const orig = getSettings;
+    getSettings = () => {
       throw new Error("boom");
     };
 
@@ -35,26 +41,24 @@ describe("Error handling", () => {
 
     assert.equal(lastReply, "There was an error retrieving the schedule.");
 
-    fs.readFileSync = orig;
+    getSettings = orig;
   });
 
   it("setnext should handle write error", (done) => {
     // Ensure owner is set so the command proceeds
-    const origConfig = fs.readFileSync(configPath, "utf8");
-    const cfg = JSON.parse(origConfig);
-    cfg.owner = "123456789";
-    fs.writeFileSync(configPath, JSON.stringify(cfg, null, 2), "utf8");
+    setBotSetting("owner", "123456789");
 
-    const origWrite = fs.writeFile;
-    fs.writeFile = (p, data, cb) => cb(new Error("disk"));
+    const origSet = setSettings;
+    setSettings = () => {
+      throw new Error("disk");
+    };
 
     const mockWithDone = makeMockInteraction({ when: Math.floor(Date.now() / 1000).toString() });
     mockWithDone.reply = (payload) => {
       const m = typeof payload === "string" ? payload : payload.content;
       lastReply = m;
       assert.equal(lastReply, "There was an error setting the next session.");
-      fs.writeFile = origWrite;
-      fs.writeFileSync(configPath, origConfig, "utf8");
+      setSettings = origSet;
       done();
     };
 
@@ -72,13 +76,8 @@ describe("Error handling", () => {
 
   it("setowner should handle write error", (done) => {
     // Clear owner for the test
-    const origConfig = fs.readFileSync(configPath, "utf8");
-    const cfg = JSON.parse(origConfig);
-    cfg.owner = undefined;
-    fs.writeFileSync(configPath, JSON.stringify(cfg, null, 2), "utf8");
-
-    const origWriteSync = fs.writeFileSync;
-    fs.writeFileSync = () => {
+    const origSet = setBotSetting;
+    setBotSetting = () => {
       throw new Error("disk");
     };
 
@@ -87,8 +86,7 @@ describe("Error handling", () => {
       const m = typeof payload === "string" ? payload : payload.content;
       lastReply = m;
       assert.equal(lastReply, "There was an error setting the owner.");
-      fs.writeFileSync = origWriteSync;
-      fs.writeFileSync(configPath, origConfig, "utf8");
+      setBotSetting = origSet;
       done();
     };
 
