@@ -1,12 +1,6 @@
 const { assert } = require("chai");
-const fs = require("node:fs");
-const path = require("node:path");
-const nextCommand = require("../src/commands/next.js");
-const setNextCommand = require("../src/commands/setnext.js");
-const setOwnerCommand = require("../src/commands/setowner.js");
-let { getSettings, setSettings, setBotSetting } = require("../db/dal.js");
-
-const configPath = path.resolve(__dirname, "..", "config.json");
+const sinon = require("sinon");
+const proxyquire = require("proxyquire");
 
 let lastReply = "";
 const makeMockInteraction = ({
@@ -16,7 +10,7 @@ const makeMockInteraction = ({
 } = {}) => ({
   user: { id: userId },
   guildId,
-  options: { getString: (k) => when },
+  options: { getString: () => when },
   reply: (payload) => {
     if (typeof payload === "string") lastReply = payload;
     else if (payload?.content) lastReply = payload.content;
@@ -30,35 +24,51 @@ const makeMockInteraction = ({
 });
 
 describe("Error handling", () => {
+  let nextCommand, setNextCommand, setOwnerCommand;
+  let getSettingsStub, setSettingsStub, setBotSettingStub;
+
+  beforeEach(() => {
+    getSettingsStub = sinon.stub();
+    setSettingsStub = sinon.stub();
+    setBotSettingStub = sinon.stub();
+
+    nextCommand = proxyquire("../src/commands/next.js", {
+      "../../db/dal.js": { getSettings: getSettingsStub }
+    });
+
+    setNextCommand = proxyquire("../src/commands/setnext.js", {
+      "../../db/dal.js": { getSettings: getSettingsStub, setSettings: setSettingsStub, getBotSetting: setBotSettingStub }
+    });
+
+    setOwnerCommand = proxyquire("../src/commands/setowner.js", {
+      "../../db/dal.js": { setBotSetting: setBotSettingStub }
+    });
+  });
+
+  afterEach(() => {
+    sinon.restore();
+  });
+
   it("next should handle config read error", () => {
-    const orig = getSettings;
-    getSettings = () => {
-      throw new Error("boom");
-    };
+    getSettingsStub.throws(new Error("boom"));
 
     const mock = makeMockInteraction();
     nextCommand.execute(mock);
 
     assert.equal(lastReply, "There was an error retrieving the schedule.");
-
-    getSettings = orig;
   });
 
   it("setnext should handle write error", (done) => {
     // Ensure owner is set so the command proceeds
-    setBotSetting("owner", "123456789");
+    setBotSettingStub.returns("123456789");
 
-    const origSet = setSettings;
-    setSettings = () => {
-      throw new Error("disk");
-    };
+    setSettingsStub.throws(new Error("disk"));
 
     const mockWithDone = makeMockInteraction({ when: Math.floor(Date.now() / 1000).toString() });
     mockWithDone.reply = (payload) => {
       const m = typeof payload === "string" ? payload : payload.content;
       lastReply = m;
       assert.equal(lastReply, "There was an error setting the next session.");
-      setSettings = origSet;
       done();
     };
 
@@ -66,6 +76,8 @@ describe("Error handling", () => {
   });
 
   it("setnext should require owner permission", () => {
+    setBotSettingStub.returns("different-owner");
+
     const mockNonOwner = makeMockInteraction({
       userId: "000000",
       when: Math.floor(Date.now() / 1000).toString(),
@@ -76,17 +88,13 @@ describe("Error handling", () => {
 
   it("setowner should handle write error", (done) => {
     // Clear owner for the test
-    const origSet = setBotSetting;
-    setBotSetting = () => {
-      throw new Error("disk");
-    };
+    setBotSettingStub.throws(new Error("disk"));
 
     const mockWithDone = makeMockInteraction();
     mockWithDone.reply = (payload) => {
       const m = typeof payload === "string" ? payload : payload.content;
       lastReply = m;
       assert.equal(lastReply, "There was an error setting the owner.");
-      setBotSetting = origSet;
       done();
     };
 

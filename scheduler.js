@@ -1,5 +1,4 @@
 const schedule = require("node-schedule");
-const { EmbedBuilder } = require("discord.js");
 const { getSettings, setSettings, getDatabase } = require("./db/dal.js");
 
 function startScheduler(client) {

@@ -4,14 +4,18 @@ const path = require("node:path");
 const setNextCommand = require("../src/commands/setnext.js");
 const nextCommand = require("../src/commands/next.js");
 const setOwnerCommand = require("../src/commands/setowner.js");
+const { getSettings, setSettings, setBotSetting, deleteSettings, getBotSetting } = require("../db/dal.js");
 
 const configPath = path.resolve(__dirname, "..", "config.json");
 
 // Mock message object
 let lastReply = "";
-const makeMockInteraction = ({ userId = "123456789", when = null } = {}) => ({
+const makeMockInteraction = ({ userId = "123456789", guildId = "test-guild", when } = {}) => ({
   user: { id: userId },
-  options: { getString: (k) => when },
+  guildId,
+  options: {
+    getString: (name) => name === "when" ? when : undefined,
+  },
   reply: (payload) => {
     if (typeof payload === "string") lastReply = payload;
     else if (payload?.content) lastReply = payload.content;
@@ -27,17 +31,38 @@ const makeMockInteraction = ({ userId = "123456789", when = null } = {}) => ({
 describe("Date Commands", () => {
   let originalConfig;
 
-  beforeEach(() => {
+  before(() => {
     // Save original config
     originalConfig = fs.readFileSync(configPath, "utf8");
     const config = JSON.parse(originalConfig);
     config.owner = "123456789";
     fs.writeFileSync(configPath, JSON.stringify(config, null, 2), "utf8");
+
+    // Set owner in database
+    setBotSetting("owner", "123456789");
+  });
+
+  after(() => {
+    // Restore original config
+    fs.writeFileSync(configPath, originalConfig, "utf8");
+  });
+
+  beforeEach(() => {
+    // Clean up test data
+    try {
+      deleteSettings("test-guild");
+    } catch (error) {
+      console.error("Error cleaning up test data:", error.message);
+    }
   });
 
   afterEach(() => {
-    // Restore original config
-    fs.writeFileSync(configPath, originalConfig, "utf8");
+    // Clean up test data
+    try {
+      deleteSettings("test-guild");
+    } catch (error) {
+      console.error("Error cleaning up test data:", error.message);
+    }
   });
 
   it("!setnext should set the next session time", (done) => {
@@ -46,8 +71,8 @@ describe("Date Commands", () => {
     mockMessageWithDone.reply = (payload) => {
       const msg = typeof payload === "string" ? payload : payload.content;
       lastReply = msg;
-      const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
-      assert.equal(config.nextSession, timestamp);
+      const settings = getSettings("test-guild");
+      assert.equal(settings.nextSession, timestamp);
       assert.include(lastReply, "Next session time has been set!");
       done();
     };
@@ -56,9 +81,7 @@ describe("Date Commands", () => {
 
   it("!next should display the next session time", () => {
     const timestamp = Math.floor(Date.now() / 1000);
-    const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
-    config.nextSession = timestamp;
-    fs.writeFileSync(configPath, JSON.stringify(config, null, 2), "utf8");
+    setSettings("test-guild", { nextSession: timestamp });
 
     const mock = makeMockInteraction();
     nextCommand.execute(mock);
@@ -66,10 +89,6 @@ describe("Date Commands", () => {
   });
 
   it("!next should show a message if session is not set", () => {
-    const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
-    config.nextSession = undefined;
-    fs.writeFileSync(configPath, JSON.stringify(config, null, 2), "utf8");
-
     const mock = makeMockInteraction();
     nextCommand.execute(mock);
     assert.equal(
@@ -106,8 +125,8 @@ describe("Owner Commands", () => {
     mockMessageWithDone.reply = (payload) => {
       const msg = typeof payload === "string" ? payload : payload.content;
       lastReply = msg;
-      const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
-      assert.equal(config.owner, "123456789");
+      const owner = getBotSetting("owner");
+      assert.equal(owner, "123456789");
       assert.equal(
         lastReply,
         "You have been set as the owner! You can now use the `/setnext` command.",
@@ -115,17 +134,13 @@ describe("Owner Commands", () => {
       done();
     };
     // Clear owner for the test
-    const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
-    config.owner = undefined;
-    fs.writeFileSync(configPath, JSON.stringify(config, null, 2), "utf8");
+    setBotSetting("owner", null);
 
     setOwnerCommand.execute(mockMessageWithDone);
   });
 
   it("!setowner should not set the owner if one is already set", () => {
-    const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
-    config.owner = "987654321";
-    fs.writeFileSync(configPath, JSON.stringify(config, null, 2), "utf8");
+    setBotSetting("owner", "987654321");
 
     const mock = makeMockInteraction();
     setOwnerCommand.execute(mock);

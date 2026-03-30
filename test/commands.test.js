@@ -8,14 +8,13 @@ const {
   getSettings,
   setSettings,
   deleteSettings,
-  getBotSetting,
-  setBotSetting,
   closeDatabase,
+  setBotSetting,
 } = require("../db/dal.js");
 
 // Test Constants
 const TEST_GUILD_ID = "532730993962909697";
-const TEST_OWNER_ID = "467015234826141716";
+const TEST_OWNER_ID = "123456789";
 const TEST_USER_ID = "user-123";
 const configPath = path.resolve(__dirname, "..", "config.json");
 const databasePath = path.resolve(__dirname, "..", "database.db");
@@ -50,13 +49,13 @@ describe("Updated Discord Commands with Database", () => {
   });
 
   beforeEach(() => {
-    // Set up bot owner in database
+    // Set the owner for tests
     setBotSetting("owner", TEST_OWNER_ID);
 
     // Clean up any existing test guild settings
     try {
       deleteSettings(TEST_GUILD_ID);
-    } catch (error) {
+    } catch (_error) { // eslint-disable-line no-unused-vars
       // Ignore
     }
   });
@@ -65,7 +64,7 @@ describe("Updated Discord Commands with Database", () => {
     // Clean up test data
     try {
       deleteSettings(TEST_GUILD_ID);
-    } catch (error) {
+    } catch (_error) { // eslint-disable-line no-unused-vars
       // Ignore
     }
   });

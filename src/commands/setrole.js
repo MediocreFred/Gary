@@ -1,5 +1,3 @@
-const fs = require("node:fs");
-const path = require("node:path");
 const { SlashCommandBuilder } = require("discord.js");
 const { getSettings, setSettings, getBotSetting } = require("../../db/dal.js");
 

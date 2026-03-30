@@ -1,7 +1,4 @@
 const { assert } = require("chai");
-const fs = require("node:fs");
-const path = require("node:path");
-const Database = require("better-sqlite3");
 
 // Import DAL functions
 const {
@@ -14,13 +11,12 @@ const {
 
 describe("Database DAL (Data Access Layer)", () => {
   const testGuildId = "test-guild-123";
-  const testDatabasePath = path.resolve(__dirname, "..", "database.db");
 
   afterEach(() => {
     try {
       // Clean up test data
       deleteSettings(testGuildId);
-    } catch (error) {
+    } catch (_error) { // eslint-disable-line no-unused-vars
       // Ignore errors during cleanup
     }
   });
@@ -28,13 +24,13 @@ describe("Database DAL (Data Access Layer)", () => {
   after(() => {
     // Clean up database file after all tests
     closeDatabase();
-    if (fs.existsSync(testDatabasePath)) {
-      try {
-        fs.unlinkSync(testDatabasePath);
-      } catch (error) {
-        console.warn("Could not delete test database file:", error.message);
-      }
-    }
+    // if (fs.existsSync(testDatabasePath)) {
+    //   try {
+    //     fs.unlinkSync(testDatabasePath);
+    //   } catch (error) {
+    //     console.warn("Could not delete test database file:", error.message);
+    //   }
+    // }
   });
 
   describe("getSettings()", () => {
@@ -188,8 +184,6 @@ describe("Database DAL (Data Access Layer)", () => {
       };
 
       setSettings(testGuildId, testSettings);
-      const firstResult = getSettings(testGuildId);
-      const firstUpdatedAt = firstResult.updatedAt;
 
       // Small delay to ensure timestamp difference
       setTimeout(() => {

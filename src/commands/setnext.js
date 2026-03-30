@@ -1,8 +1,5 @@
-const path = require("node:path");
-const fs = require("node:fs");
 const { SlashCommandBuilder } = require("discord.js");
-const { getSettings, setSettings } = require("../../db/dal.js");
-const { getBotSetting } = require("../../db/dal.js");
+const { getSettings, setSettings, getBotSetting } = require("../../db/dal.js");
 
 module.exports = {
   data: new SlashCommandBuilder()

@@ -5,32 +5,19 @@ const { setSettings, getSettings, deleteSettings, closeDatabase } = require("../
 
 const databasePath = path.resolve(__dirname, "..", "database.db");
 
-// Mock Discord Client and Channel
-const makeMockClient = () => ({
-  channels: {
-    fetch: async (channelId) => {
-      if (channelId === "valid-channel-id") {
-        return {
-          send: async (message) => ({
-            react: async (emoji) => {
-              // Mock reaction
-            },
-          }),
-        };
-      }
-      return null;
-    },
-  },
-});
-
 // We'll test the scheduler logic without actually scheduling
 describe("Scheduler Logic (Database Integration)", () => {
   const TEST_GUILD_ID = "test-guild-scheduler";
 
+  before(() => {
+    // Initialize database
+    require("../db/dal.js").getSettings("dummy");
+  });
+
   afterEach(() => {
     try {
       deleteSettings(TEST_GUILD_ID);
-    } catch (error) {
+    } catch (_error) { // eslint-disable-line no-unused-vars
       // Ignore
     }
   });
@@ -40,8 +27,8 @@ describe("Scheduler Logic (Database Integration)", () => {
     if (fs.existsSync(databasePath)) {
       try {
         fs.unlinkSync(databasePath);
-      } catch (error) {
-        console.warn("Could not delete test database:", error.message);
+      } catch (_error) {
+        console.warn("Could not delete test database:", _error.message);
       }
     }
   });
@@ -133,7 +120,6 @@ describe("Scheduler Logic (Database Integration)", () => {
         fiveMinuteWarningSent: false,
       });
 
-      const settings = getSettings(TEST_GUILD_ID);
       const now = new Date();
 
       // Verify the 5-minute window has not started yet (session is 10 min away)
@@ -245,10 +231,10 @@ describe("Scheduler Logic (Database Integration)", () => {
       });
 
       const settings = getSettings(TEST_GUILD_ID);
-      const isComplete =
-        settings.nextSession && settings.announcementChannel && settings.announcementRole;
-
-      assert.isTrue(isComplete, "Should have all required fields");
+      assert.isNotNull(settings, "Settings should exist");
+      assert.isNotNull(settings.nextSession, "nextSession should be set");
+      assert.equal(settings.announcementChannel, "channel-123", "announcementChannel should be set");
+      assert.equal(settings.announcementRole, "role-456", "announcementRole should be set");
     });
   });
 
