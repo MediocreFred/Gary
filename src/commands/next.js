@@ -1,33 +1,36 @@
-const fs = require("node:fs");
-const path = require("node:path");
 const { SlashCommandBuilder } = require("discord.js");
+const { getSettings } = require("../../db/dal.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("next")
     .setDescription("Displays the time of the next session."),
   async execute(interaction) {
-    const configPath = path.resolve(__dirname, "..", "..", "config.json");
-
-    let config;
-    try {
-      config = JSON.parse(fs.readFileSync(configPath, "utf8"));
-    } catch (error) {
-      console.error("Error reading config:", error);
+    const guildId = interaction.guildId;
+    if (!guildId) {
       return interaction.reply({
-        content: "There was an error retrieving the schedule.",
+        content: "This command can only be used in a server.",
         ephemeral: true,
       });
     }
 
-    const timestamp = config.nextSession;
+    try {
+      const settings = getSettings(guildId);
+      const timestamp = settings?.nextSession;
 
-    if (timestamp) {
-      await interaction.reply(`The next session is scheduled for <t:${timestamp}:R>`);
-    } else {
+      if (timestamp) {
+        await interaction.reply(`The next session is scheduled for <t:${timestamp}:R>`);
+      } else {
+        await interaction.reply({
+          content: "The next session has not been set yet. Use the `/setnext` command to set it.",
+          ephemeral: false,
+        });
+      }
+    } catch (error) {
+      console.error("Error retrieving schedule:", error);
       await interaction.reply({
-        content: "The next session has not been set yet. Use the `/setnext` command to set it.",
-        ephemeral: false,
+        content: "There was an error retrieving the schedule.",
+        ephemeral: true,
       });
     }
   },

@@ -1,6 +1,6 @@
 const fs = require("node:fs");
 const { prefix, token } = require("./config.json");
-const { Client, Collection, GatewayIntentBits, Partials, EmbedBuilder } = require("discord.js");
+const { Client, Collection, GatewayIntentBits, Partials } = require("discord.js");
 
 const client = new Client({
   intents: [

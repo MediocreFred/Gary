@@ -9,3 +9,5 @@ node_modules/
 .nyc_output/
 .local-info
 .env
+database.db
+database.db-journal
