@@ -13,7 +13,7 @@ describe("Reset script", () => {
     try {
       deleteSettings(testGuildId);
       setBotSetting("owner", "test-owner");
-    } catch (_error) {
+    } catch {
       // ignore cleanup errors
     }
   });

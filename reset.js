@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 
-const { getDatabase, getSettings, setSettings, deleteSettings, getBotSetting, setBotSetting } = require("./db/dal.js");
-const fs = require("node:fs");
-const path = require("node:path");
+const { getDatabase, deleteSettings, setBotSetting } = require("./db/dal.js");
 
 // Parse command line arguments
 const args = process.argv.slice(2);
