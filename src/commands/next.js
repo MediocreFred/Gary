@@ -19,7 +19,9 @@ module.exports = {
       const timestamp = settings?.nextSession;
 
       if (timestamp) {
-        await interaction.reply(`The next session is scheduled for <t:${timestamp}:R>`);
+        await interaction.reply(
+          `The next session is scheduled for <t:${timestamp}:F> (<t:${timestamp}:R>)`,
+        );
       } else {
         await interaction.reply({
           content: "The next session has not been set yet. Use the `/setnext` command to set it.",

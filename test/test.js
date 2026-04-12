@@ -13,6 +13,7 @@ let lastReply = "";
 const makeMockInteraction = ({ userId = "123456789", guildId = "test-guild", when } = {}) => ({
   user: { id: userId },
   guildId,
+  guild: { ownerId: userId },
   options: {
     getString: (name) => name === "when" ? when : undefined,
   },
@@ -20,6 +21,7 @@ const makeMockInteraction = ({ userId = "123456789", guildId = "test-guild", whe
     if (typeof payload === "string") lastReply = payload;
     else if (payload?.content) lastReply = payload.content;
     else lastReply = undefined;
+    return Promise.resolve();
   },
   channel: {
     send: (msg) => {
@@ -48,6 +50,7 @@ describe("Date Commands", () => {
   });
 
   beforeEach(() => {
+    lastReply = "";
     // Clean up test data
     try {
       deleteSettings("test-guild");
@@ -85,7 +88,10 @@ describe("Date Commands", () => {
 
     const mock = makeMockInteraction();
     nextCommand.execute(mock);
-    assert.equal(lastReply, `The next session is scheduled for <t:${timestamp}:R>`);
+    assert.equal(
+      lastReply,
+      `The next session is scheduled for <t:${timestamp}:F> (<t:${timestamp}:R>)`,
+    );
   });
 
   it("!next should show a message if session is not set", () => {
@@ -102,7 +108,7 @@ describe("Date Commands", () => {
     setNextCommand.execute(mockInvalid);
     assert.equal(
       lastReply,
-      'Please provide a valid date/time string in the format "YYYY-MM-DD HH:mm".',
+      'Please provide a valid date/time expression like "tomorrow at 8pm", "next Friday", or "3/23 8pm".',
     );
   });
 });

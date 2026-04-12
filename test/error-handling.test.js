@@ -10,11 +10,13 @@ const makeMockInteraction = ({
 } = {}) => ({
   user: { id: userId },
   guildId,
+  guild: { ownerId: userId },
   options: { getString: () => when },
   reply: (payload) => {
     if (typeof payload === "string") lastReply = payload;
     else if (payload?.content) lastReply = payload.content;
     else lastReply = undefined;
+    return Promise.resolve();
   },
   channel: {
     send: (msg) => {
@@ -25,12 +27,14 @@ const makeMockInteraction = ({
 
 describe("Error handling", () => {
   let nextCommand, setNextCommand, setOwnerCommand;
-  let getSettingsStub, setSettingsStub, setBotSettingStub;
+  let getSettingsStub, setSettingsStub, setBotSettingStub, getBotSettingStub;
 
   beforeEach(() => {
+    lastReply = "";
     getSettingsStub = sinon.stub();
     setSettingsStub = sinon.stub();
     setBotSettingStub = sinon.stub();
+    getBotSettingStub = sinon.stub().returns(null);
 
     nextCommand = proxyquire("../src/commands/next.js", {
       "../../db/dal.js": { getSettings: getSettingsStub }
@@ -41,7 +45,7 @@ describe("Error handling", () => {
     });
 
     setOwnerCommand = proxyquire("../src/commands/setowner.js", {
-      "../../db/dal.js": { setBotSetting: setBotSettingStub }
+      "../../db/dal.js": { setBotSetting: setBotSettingStub, getBotSetting: getBotSettingStub }
     });
   });
 

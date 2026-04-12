@@ -1,6 +1,7 @@
 const { assert } = require("chai");
 const fs = require("node:fs");
 const path = require("node:path");
+const sinon = require("sinon");
 const setNextCommand = require("../src/commands/setnext.js");
 const setChannelCommand = require("../src/commands/setchannel.js");
 const setRoleCommand = require("../src/commands/setrole.js");
@@ -33,11 +34,16 @@ const makeMockInteraction = ({
     getRole: (key) => options.role?.[key] || null,
   },
   reply: function (payload) {
-    this.lastReply = typeof payload === "string" ? payload : payload?.content || payload;
+    if (typeof payload === "string") {
+      this.lastReply = payload;
+      this.lastReplyEphemeral = undefined;
+    } else {
+      this.lastReply = payload?.content || payload;
+      this.lastReplyEphemeral = payload?.ephemeral;
+    }
+
     return Promise.resolve();
   },
-  deferred: false,
-  replied: false,
 });
 
 describe("Updated Discord Commands with Database", () => {
@@ -129,6 +135,43 @@ describe("Updated Discord Commands with Database", () => {
       assert.isFalse(settings.fiveMinuteWarningSent);
     });
 
+    it("should accept natural language date input and preserve the parsed time", async () => {
+      const clock = sinon.useFakeTimers(new Date(2026, 2, 24, 12, 0, 0).getTime());
+      const interaction = makeMockInteraction({
+        userId: TEST_OWNER_ID,
+        options: {
+          string: { when: "tomorrow at 8pm" },
+        },
+      });
+
+      await setNextCommand.execute(interaction);
+
+      const settings = getSettings(TEST_GUILD_ID);
+      assert.isNotNull(settings);
+      assert.equal(settings.nextSession, Math.floor(new Date(2026, 2, 25, 20, 0, 0).getTime() / 1000));
+      assert.include(interaction.lastReply, "<t:");
+      assert.isTrue(interaction.lastReplyEphemeral);
+      clock.restore();
+    });
+
+    it("should infer the next year when a past month/day is provided without a year", async () => {
+      const clock = sinon.useFakeTimers(new Date(2026, 2, 24, 12, 0, 0).getTime());
+      const interaction = makeMockInteraction({
+        userId: TEST_OWNER_ID,
+        options: {
+          string: { when: "3/23 8pm" },
+        },
+      });
+
+      await setNextCommand.execute(interaction);
+
+      const settings = getSettings(TEST_GUILD_ID);
+      assert.isNotNull(settings);
+      assert.equal(settings.nextSession, Math.floor(new Date(2027, 2, 23, 20, 0, 0).getTime() / 1000));
+      assert.equal(interaction.lastReplyEphemeral, true);
+      clock.restore();
+    });
+
     it("should accept unix timestamp (seconds) and save to database", async () => {
       const timestamp = Math.floor(Date.now() / 1000) + 86400; // Tomorrow
       const interaction = makeMockInteraction({
@@ -218,7 +261,8 @@ describe("Updated Discord Commands with Database", () => {
 
       await setNextCommand.execute(interaction);
 
-      assert.include(interaction.lastReply, "valid date/time string");
+      assert.include(interaction.lastReply, "valid date/time expression");
+      assert.equal(interaction.lastReplyEphemeral, true);
       const settings = getSettings(TEST_GUILD_ID);
       assert.isNull(settings, "Should not create settings for invalid input");
     });
